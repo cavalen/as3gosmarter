@@ -1,0 +1,2402 @@
+{
+	"info": {
+		"_postman_id": "1f75496f-9e9a-44a1-9034-fe2406406d21",
+		"name": "A&O Latam",
+		"description": "Coleccion de GoSmarter v2",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Lab 0 - Install Postman WorkFlows",
+			"item": [
+				{
+					"name": "Step 1: Check f5-postman-workflows Version",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"var installed_ver = \"\";",
+									"if(globals._f5_workflow_functions) {",
+									"    eval(postman.getGlobalVariable('_f5_workflow_functions'));",
+									"    installed_ver = f5_get_version();",
+									"    tests[\"Current Installed Version: \" + installed_ver] = 1;",
+									"} else {",
+									"    tests[\"Current Installed Version: Not Installed\"] = 0;",
+									"}",
+									"",
+									"var current_ver = responseBody;",
+									"current_ver = current_ver.replace(/\\n/g, '');",
+									"tests[\"Latest Available Version: \" + current_ver] = 1;",
+									"",
+									"if(current_ver == installed_ver) {",
+									"    tests[\"Latest Version IS Installed\"] = 1;",
+									"} else {",
+									"    tests[\"Latest Version is NOT Installed\"] = 0;",
+									"}",
+									""
+								]
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"if( postman.getGlobalVariable('_f5_framework_branch') === undefined) {",
+									"    postman.setGlobalVariable('_f5_framework_branch', 'master');",
+									"}"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "https://raw.githubusercontent.com/0xHiteshPatel/f5-postman-workflows/{{_f5_framework_branch}}/VERSION.md",
+							"protocol": "https",
+							"host": [
+								"raw",
+								"githubusercontent",
+								"com"
+							],
+							"path": [
+								"0xHiteshPatel",
+								"f5-postman-workflows",
+								"{{_f5_framework_branch}}",
+								"VERSION.md"
+							]
+						},
+						"description": "This request uses Google's Closure Compiler service to GET the latest version of the package from Github, minify it and install it in the '_f5_workflow_functions' global variable\n\nIt will also create global variables for configuration if they don't already exist."
+					},
+					"response": []
+				},
+				{
+					"name": "Step 2: Install/Upgrade f5-postman-workflows",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "0e12652b-aedf-4c81-be75-73bff6e1e267",
+								"exec": [
+									"var fresh_install = false;",
+									"var global_defaults = [",
+									"        [\"_f5_debug\"              ,\"1\"],    ",
+									"        [\"_f5_enable_polled_mode\" ,\"0\"],",
+									"        [\"_f5_poll_max_tries\"     ,\"60\"],",
+									"        [\"_f5_poll_wait\"          ,\"5\"],",
+									"        [\"_f5_poll_useinternal\"   ,\"0\"],",
+									"        [\"_f5_poll_apiurl\"        ,\"https://postman-echo.com/delay\"],",
+									"        [\"_f5_poll_bypass_timeout\",\"0\"],",
+									"        [\"_f5_poll_iterator\"      ,\"1\"],",
+									"        [\"_f5_poll_curr\"          ,\"\"],",
+									"    ];",
+									"    ",
+									"var json = JSON.parse(responseBody);",
+									"",
+									"if (json.compiledCode.length > 0 && json.errors === undefined) {",
+									"    for(var i = 0; i < global_defaults.length; i++) {",
+									"        if(!(global_defaults[i][0] in globals) || fresh_install) {",
+									"            console.log(\"INSTALL: global: \" + global_defaults[i][0] + \"=\" + global_defaults[i][1]);",
+									"            postman.setGlobalVariable(global_defaults[i][0], global_defaults[i][1]);",
+									"        }",
+									"    }",
+									"    postman.setGlobalVariable('_f5_workflow_functions', json.compiledCode);",
+									"    console.log(\"INSTALL: set _f5_workflow_functions\");",
+									"    ",
+									"    tests['Install Successful'] = 1;",
+									"} else {",
+									"    tests['Install Failed'] = 0;",
+									"}",
+									"",
+									"if (postman.getGlobalVariable('_f5_framework_branch') == 'master') {",
+									"    postman.clearGlobalVariable('_f5_framework_branch');",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "4078b7cb-bbeb-4457-b952-153b7215360f",
+								"exec": [
+									"if( postman.getGlobalVariable('_f5_framework_branch') === undefined) {",
+									"    postman.setGlobalVariable('_f5_framework_branch', 'master');",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "https://closure-compiler.appspot.com/compile?code_url=https://raw.githubusercontent.com/0xHiteshPatel/f5-postman-workflows/{{_f5_framework_branch}}/framework/src/f5-postman-workflows.js&compilation_level=SIMPLE_OPTIMIZATIONS&output_format=json&output_info=warnings&output_info=errors&output_info=compiled_code",
+							"protocol": "https",
+							"host": [
+								"closure-compiler",
+								"appspot",
+								"com"
+							],
+							"path": [
+								"compile"
+							],
+							"query": [
+								{
+									"key": "code_url",
+									"value": "https://raw.githubusercontent.com/0xHiteshPatel/f5-postman-workflows/{{_f5_framework_branch}}/framework/src/f5-postman-workflows.js"
+								},
+								{
+									"key": "compilation_level",
+									"value": "SIMPLE_OPTIMIZATIONS"
+								},
+								{
+									"key": "output_format",
+									"value": "json"
+								},
+								{
+									"key": "output_info",
+									"value": "warnings"
+								},
+								{
+									"key": "output_info",
+									"value": "errors"
+								},
+								{
+									"key": "output_info",
+									"value": "compiled_code"
+								}
+							]
+						},
+						"description": "This request uses Google's Closure Compiler service to GET the latest version of the package from Github, minify it and install it in the '_f5_workflow_functions' global variable\n\nIt will also create global variables for configuration if they don't already exist."
+					},
+					"response": []
+				}
+			],
+			"description": "https://clouddocs.f5.com/training/community/programmability/html/class1/labinfo/self_built.html\n\n1. Open Postman\n2. Click the ‘Import’ button\n3. Select ‘Import from Link’\n4. Enter https://raw.githubusercontent.com/0xHiteshPatel/f5-postman-workflows/master/F5_Postman_Workflows.postman_collection.json in the field\n5. Click the ‘Import’ button\n6. Navigate to your Postman Collections\n7. Expand the ‘F5_Postman_Workflows’ collection\n8. Expand the ‘Install’ folder\n9. Click the ‘Install/Upgrade f5-postman-workflows’ items\n10. Click the ‘Send’ button",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "3eff8b45-10de-400c-aedf-006ed2e82558",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "55fa380e-584f-425e-9853-105a2d969d6f",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Lab 1 - Auth & Initial Settings",
+			"item": [
+				{
+					"name": "Step 1: HTTP BASIC Authentication",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "7fe46453-2ee2-4be7-8cdb-7c1e82f510ed",
+								"exec": [
+									"eval(postman.getGlobalVariable(\"_f5_workflow_functions\"));",
+									"",
+									"var check_vals = [",
+									"        { ",
+									"            \"path\":\"kind\", ",
+									"            \"value\":\"tm:ltm:ltmcollectionstate\" ",
+									"        }",
+									"    ];",
+									"",
+									"f5_check_response(check_vals);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "admin",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "admin",
+									"type": "string"
+								},
+								{
+									"key": "showPassword",
+									"value": false,
+									"type": "boolean"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "https://{{bigip1}}/mgmt/tm/ltm",
+							"protocol": "https",
+							"host": [
+								"{{bigip1}}"
+							],
+							"path": [
+								"mgmt",
+								"tm",
+								"ltm"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Retrieve Authentication Token BIGIP1",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "766bb157-29e5-4539-9cd6-01b6b08ab5cb",
+								"exec": [
+									"eval(postman.getGlobalVariable(\"_f5_workflow_functions\"));",
+									"",
+									"var populate_vars = [",
+									"        {name:\"bigip_1_auth_token\", value:\"token.token\"}",
+									"    ];",
+									"    ",
+									"f5_populate_env_vars(populate_vars);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\":\"{{bigip_admin_user}}\",\n    \"password\":\"{{bigip_admin_password}}\",\n    \"loginProviderName\":\"tmos\"\n}"
+						},
+						"url": {
+							"raw": "https://{{bigip1}}/mgmt/shared/authn/login",
+							"protocol": "https",
+							"host": [
+								"{{bigip1}}"
+							],
+							"path": [
+								"mgmt",
+								"shared",
+								"authn",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Set Authentication Token Timeout BIGIP1",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "85b2f12c-366b-42d6-93c1-ce808473ddbc",
+								"exec": [
+									"eval(postman.getGlobalVariable(\"_f5_workflow_functions\"));",
+									"",
+									"var check_vals = [",
+									"        { ",
+									"            \"path\":\"timeout\", ",
+									"            \"value\":\"36000\" ",
+									"        }",
+									"    ];",
+									"",
+									"f5_check_response(check_vals);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-F5-Auth-Token",
+								"value": "{{bigip_1_auth_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"timeout\":\"36000\"\n}"
+						},
+						"url": {
+							"raw": "https://{{bigip1}}/mgmt/shared/authz/tokens/{{bigip_1_auth_token}}",
+							"protocol": "https",
+							"host": [
+								"{{bigip1}}"
+							],
+							"path": [
+								"mgmt",
+								"shared",
+								"authz",
+								"tokens",
+								"{{bigip_1_auth_token}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Step 2: Get 'example' of a Pool Resource",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "c5af6403-9aa9-4097-a36d-9611ffa757df",
+								"exec": [
+									"eval(postman.getGlobalVariable(\"_f5_workflow_functions\"));",
+									"",
+									"var check_vals = [",
+									"        { ",
+									"            \"path\":\"kind\", ",
+									"            \"value\":\"tm:ltm:pool:poolcollectionstate\" ",
+									"        }",
+									"    ];",
+									"",
+									"f5_check_response(check_vals);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-F5-Auth-Token",
+								"value": "{{bigip_1_auth_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "https://{{bigip1}}/mgmt/tm/ltm/pool/example",
+							"protocol": "https",
+							"host": [
+								"{{bigip1}}"
+							],
+							"path": [
+								"mgmt",
+								"tm",
+								"ltm",
+								"pool",
+								"example"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Step 3a: Get System DNS Settings",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "3b964cf1-5d64-4b30-a925-bb1a7e71cf3e",
+								"exec": [
+									"eval(postman.getGlobalVariable(\"_f5_workflow_functions\"));",
+									"",
+									"var check_vals = [",
+									"        { ",
+									"            \"path\":\"kind\", ",
+									"            \"value\":\"tm:sys:dns:dnsstate\" ",
+									"        }",
+									"    ];",
+									"",
+									"f5_check_response(check_vals);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-F5-Auth-Token",
+								"value": "{{bigip_1_auth_token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "https://{{bigip1}}/mgmt/tm/sys/dns",
+							"protocol": "https",
+							"host": [
+								"{{bigip1}}"
+							],
+							"path": [
+								"mgmt",
+								"tm",
+								"sys",
+								"dns"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Step 3b: Set System DNS Settings",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "c31ee67b-41ce-4354-b6ae-207d0c74c4b7",
+								"exec": [
+									"eval(postman.getGlobalVariable(\"_f5_workflow_functions\"));",
+									"",
+									"var check_vals = [",
+									"        { ",
+									"            \"path\":\"nameServers.0\", ",
+									"            \"value\": \"4.2.2.2\"",
+									"        },",
+									"        { ",
+									"            \"path\":\"nameServers.1\", ",
+									"            \"value\": \"8.8.8.8\"",
+									"        },",
+									"        { ",
+									"            \"path\":\"search.0\", ",
+									"            \"value\": \"localhost\"",
+									"        },",
+									"        { ",
+									"            \"path\":\"search.1\", ",
+									"            \"value\": \"f5.local\"",
+									"        }          ",
+									"    ];",
+									"",
+									"f5_check_response(check_vals);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "X-F5-Auth-Token",
+								"value": "{{bigip_1_auth_token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"nameServers\": [\n    \"4.2.2.2\",\n    \"8.8.8.8\"\n  ],\n  \"search\": [\n    \"localhost\"\n  ]\n}"
+						},
+						"url": {
+							"raw": "https://{{bigip1}}/mgmt/tm/sys/dns",
+							"protocol": "https",
+							"host": [
+								"{{bigip1}}"
+							],
+							"path": [
+								"mgmt",
+								"tm",
+								"sys",
+								"dns"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Step 4: Get System NTP Settings",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "7ae847ae-0e78-4656-b59c-565fd7348bf1",
+								"exec": [
+									"eval(postman.getGlobalVariable(\"_f5_workflow_functions\"));",
+									"",
+									"var check_vals = [",
+									"        { ",
+									"            \"path\":\"kind\", ",
+									"            \"value\":\"tm:sys:ntp:ntpstate\" ",
+									"        }",
+									"    ];",
+									"",
+									"f5_check_response(check_vals);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-F5-Auth-Token",
+								"value": "{{bigip_1_auth_token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "https://{{bigip1}}/mgmt/tm/sys/ntp",
+							"protocol": "https",
+							"host": [
+								"{{bigip1}}"
+							],
+							"path": [
+								"mgmt",
+								"tm",
+								"sys",
+								"ntp"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Step 5: Set System NTP Settings",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "8b7398b9-3d98-4fe0-b7f1-6ee819822349",
+								"exec": [
+									"eval(postman.getGlobalVariable(\"_f5_workflow_functions\"));",
+									"",
+									"var check_vals = [",
+									"        { ",
+									"            \"path\":\"servers.0\", ",
+									"            \"value\": \"0.pool.ntp.org\"",
+									"        },",
+									"        { ",
+									"            \"path\":\"servers.1\", ",
+									"            \"value\": \"1.pool.ntp.org\"",
+									"        },",
+									"        { ",
+									"            \"path\":\"timezone\", ",
+									"            \"value\": \"America/Los_Angeles\"",
+									"        }        ",
+									"    ];",
+									"",
+									"f5_check_response(check_vals);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "X-F5-Auth-Token",
+								"value": "{{bigip_1_auth_token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"servers\": [\n    \"0.pool.ntp.org\",\n    \"1.pool.ntp.org\"\n  ],\n  \"timezone\": \"America/Bogota\"\n}"
+						},
+						"url": {
+							"raw": "https://{{bigip1}}/mgmt/tm/sys/ntp",
+							"protocol": "https",
+							"host": [
+								"{{bigip1}}"
+							],
+							"path": [
+								"mgmt",
+								"tm",
+								"sys",
+								"ntp"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Step 6: Set root User Password",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "8ff8b010-dd4b-410f-85da-cb57ab6b82f5",
+								"exec": [
+									"eval(postman.getGlobalVariable(\"_f5_workflow_functions\"));",
+									"",
+									"var check_vals = [",
+									"        { ",
+									"            \"path\":\"generation\", ",
+									"            \"value\":\"0\",",
+									"            \"op\": \">=\"",
+									"        }",
+									"    ];",
+									"",
+									"f5_check_response(check_vals);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "X-F5-Auth-Token",
+								"value": "{{bigip_1_auth_token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"oldPassword\":\"default\",\n    \"newPassword\":\"\"\n}"
+						},
+						"url": {
+							"raw": "https://{{bigip1}}/mgmt/shared/authn/root",
+							"protocol": "https",
+							"host": [
+								"{{bigip1}}"
+							],
+							"path": [
+								"mgmt",
+								"shared",
+								"authn",
+								"root"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Step 7: Set admin User Password",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "037d33dc-3dcc-4490-b1b3-bce37e937baa",
+								"exec": [
+									"eval(postman.getGlobalVariable(\"_f5_workflow_functions\"));",
+									"",
+									"var check_vals = [",
+									"        { ",
+									"            \"path\":\"name\", ",
+									"            \"value\":\"admin\" ",
+									"        }",
+									"    ];",
+									"",
+									"f5_check_response(check_vals);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "X-F5-Auth-Token",
+								"value": "{{bigip_1_auth_token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"password\":\"\",\n    \"shell\":\"bash\"\n}"
+						},
+						"url": {
+							"raw": "https://{{bigip1}}/mgmt/tm/auth/user/admin",
+							"protocol": "https",
+							"host": [
+								"{{bigip1}}"
+							],
+							"path": [
+								"mgmt",
+								"tm",
+								"auth",
+								"user",
+								"admin"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Step 8: Get License Status",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-F5-Auth-Token",
+								"value": "{{bigip_1_auth_token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "https://{{bigip1}}/mgmt/tm/shared/licensing/registration",
+							"protocol": "https",
+							"host": [
+								"{{bigip1}}"
+							],
+							"path": [
+								"mgmt",
+								"tm",
+								"shared",
+								"licensing",
+								"registration"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Lab 2 - Declarative Onboarding (DO)",
+			"item": [
+				{
+					"name": "Step 1: Get Installed iControl LX Extensions",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "5e098299-9d1c-4d54-b189-b8d35751507c",
+								"exec": [
+									"eval(postman.getGlobalVariable(\"_f5_workflow_functions\"));",
+									"",
+									"var check_vals = [",
+									"        { ",
+									"            \"path\":\"kind\",",
+									"            \"value\":\"shared:iapp:installed-packages:installedpackagecollectionstate\",",
+									"        }       ",
+									"    ];",
+									"",
+									"f5_check_response(check_vals);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-F5-Auth-Token",
+								"value": "{{bigip_1_auth_token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "https://{{bigip1}}/mgmt/shared/iapp/installed-packages",
+							"protocol": "https",
+							"host": [
+								"{{bigip1}}"
+							],
+							"path": [
+								"mgmt",
+								"shared",
+								"iapp",
+								"installed-packages"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Step 2: Upload DO Extension RPM",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "bb38c6e9-0658-458c-be36-3f95d74c9a1c",
+								"exec": [
+									"eval(postman.getGlobalVariable(\"_f5_workflow_functions\"));",
+									"",
+									"var check_vals = [",
+									"        { ",
+									"            \"path\":\"localFilePath\",",
+									"            \"value\":\"/f5-declarative-onboarding-1..*.noarch.rpm$/i\",",
+									"            \"op\":\"regex\"",
+									"        }",
+									"    ];",
+									"",
+									"f5_check_response(check_vals);"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "ec269764-4137-4028-b375-4e6471b42ff9",
+								"exec": [
+									"// Create the value for the Content-Range header based on the file size of the RPM",
+									"// https://devcentral.f5.com/articles/demystifying-icontrol-rest-part-5-transferring-files",
+									"",
+									"var fileLen = parseInt(pm.environment.get(\"do_filelen\"));",
+									"pm.globals.set(\"_do_content_range\",\"0-\" + (fileLen - 1) + \"/\" + fileLen);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/octet-stream"
+							},
+							{
+								"key": "Content-Range",
+								"value": "{{_do_content_range}}"
+							},
+							{
+								"key": "X-F5-Auth-Token",
+								"value": "{{bigip_1_auth_token}}"
+							},
+							{
+								"key": "Connection",
+								"value": "keep-alive"
+							}
+						],
+						"body": {
+							"mode": "file",
+							"file": {}
+						},
+						"url": {
+							"raw": "https://{{bigip1}}/mgmt/shared/file-transfer/uploads/{{do_filename}}",
+							"protocol": "https",
+							"host": [
+								"{{bigip1}}"
+							],
+							"path": [
+								"mgmt",
+								"shared",
+								"file-transfer",
+								"uploads",
+								"{{do_filename}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Step 3: Create DO Extension Install Task",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "a4da1ae5-cea8-48aa-b803-b45a0086508a",
+								"exec": [
+									"eval(postman.getGlobalVariable(\"_f5_workflow_functions\"));",
+									"",
+									"var check_vals = [",
+									"        { ",
+									"            \"path\":\"status\",",
+									"            \"value\":\"CREATED\"",
+									"        }       ",
+									"    ];",
+									"var populate_vars = [",
+									"        { ",
+									"            \"name\":\"_do_install_uuid\",",
+									"            \"value\":\"id\"",
+									"        }      ",
+									"    ];",
+									"    ",
+									"f5_populate_env_vars(populate_vars);",
+									"f5_check_response(check_vals);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-F5-Auth-Token",
+								"value": "{{bigip_1_auth_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"operation\":\"INSTALL\",\n  \"packageFilePath\":\"/var/config/rest/downloads/{{do_filename}}\"\n}"
+						},
+						"url": {
+							"raw": "https://{{bigip1}}/mgmt/shared/iapp/package-management-tasks",
+							"protocol": "https",
+							"host": [
+								"{{bigip1}}"
+							],
+							"path": [
+								"mgmt",
+								"shared",
+								"iapp",
+								"package-management-tasks"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Step 4: Get DO Install Task Status",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "2cfb16a5-d7b6-4580-9428-93f10b49d6ad",
+								"exec": [
+									"eval(postman.getGlobalVariable(\"_f5_workflow_functions\"));",
+									"",
+									"var check_vals = [",
+									"        { ",
+									"            \"path\":\"status\",",
+									"            \"value\":\"FINISHED\"",
+									"        }       ",
+									"    ];",
+									"",
+									"f5_check_response(check_vals);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-F5-Auth-Token",
+								"value": "{{bigip_1_auth_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "https://{{bigip1}}/mgmt/shared/iapp/package-management-tasks/{{_do_install_uuid}}",
+							"protocol": "https",
+							"host": [
+								"{{bigip1}}"
+							],
+							"path": [
+								"mgmt",
+								"shared",
+								"iapp",
+								"package-management-tasks",
+								"{{_do_install_uuid}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Step 5: Check DO Installed",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "72146941-5edf-430b-b687-8e6c3e0b5ecd",
+								"exec": [
+									"eval(postman.getGlobalVariable(\"_f5_workflow_functions\"));",
+									"",
+									"var check_vals = [",
+									"        { ",
+									"            \"path\":\"declaration\"",
+									"        }       ",
+									"    ];",
+									"",
+									"f5_check_response(check_vals);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-F5-Auth-Token",
+								"value": "{{bigip_1_auth_token}}"
+							},
+							{
+								"key": "Connection",
+								"value": "keep-alive"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "https://{{bigip1}}/mgmt/shared/declarative-onboarding/",
+							"protocol": "https",
+							"host": [
+								"{{bigip1}}"
+							],
+							"path": [
+								"mgmt",
+								"shared",
+								"declarative-onboarding",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Step 6: DO Declaration",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "bb38c6e9-0658-458c-be36-3f95d74c9a1c",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "ec269764-4137-4028-b375-4e6471b42ff9",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "X-F5-Auth-Token",
+								"value": "{{bigip_1_auth_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"schemaVersion\": \"1.0.0\",\r\n    \"class\": \"Device\",\r\n    \"async\": true,\r\n    \"label\": \"Basic Onboarding Standalone BIG-IP\",\r\n    \"Common\": {\r\n        \"class\": \"Tenant\",\r\n        \"hostname\": \"bigip.f5demo.com\",\r\n        \"myDns\": {\r\n            \"class\": \"DNS\",\r\n            \"nameServers\": [\r\n                \"8.8.8.8\",\r\n                \"4.4.4.4\"\r\n            ],\r\n            \"search\": [\r\n                \"f5demo.com\"\r\n            ]\r\n        },\r\n        \"myNtp\": {\r\n            \"class\": \"NTP\",\r\n            \"servers\": [\r\n                \"0.pool.ntp.org\",\r\n                \"1.pool.ntp.org\",\r\n                \"2.pool.ntp.org\"\r\n            ],\r\n            \"timezone\": \"UTC\"\r\n        },\r\n        \"root\": {\r\n            \"class\": \"User\",\r\n            \"userType\": \"root\",\r\n            \"oldPassword\": \"default\",\r\n            \"newPassword\": \"default\"\r\n        },\r\n        \"admin\": {\r\n            \"class\": \"User\",\r\n            \"userType\": \"regular\",\r\n            \"password\": \"admin\",\r\n            \"shell\": \"bash\"\r\n        },\r\n        \"anotherUser\": {\r\n            \"class\": \"User\",\r\n            \"userType\": \"regular\",\r\n            \"password\": \"regular\",\r\n            \"shell\": \"none\",\r\n            \"partitionAccess\": {\r\n                \"all-partitions\": {\r\n                    \"role\": \"guest\"\r\n                }\r\n            }\r\n        },\r\n        \"myProvisioning\": {\r\n            \"class\": \"Provision\",\r\n            \"ltm\": \"nominal\",\r\n            \"asm\": \"nominal\"\r\n        },\r\n        \"internal\": {\r\n            \"class\": \"VLAN\",\r\n            \"tag\": 4093,\r\n            \"mtu\": 1500,\r\n            \"interfaces\": [\r\n                {\r\n                    \"name\": \"1.2\",\r\n                    \"tagged\": false\r\n                }\r\n            ]\r\n        },\r\n        \"internal-self\": {\r\n            \"class\": \"SelfIp\",\r\n            \"address\": \"10.1.20.240/24\",\r\n            \"vlan\": \"internal\",\r\n            \"allowService\": \"default\",\r\n            \"trafficGroup\": \"traffic-group-local-only\"\r\n        },\r\n        \"external\": {\r\n            \"class\": \"VLAN\",\r\n            \"tag\": 4094,\r\n            \"mtu\": 1500,\r\n            \"interfaces\": [\r\n                {\r\n                    \"name\": \"1.1\",\r\n                    \"tagged\": false\r\n                }\r\n            ]\r\n        },\r\n        \"external-self\": {\r\n            \"class\": \"SelfIp\",\r\n            \"address\": \"10.1.10.240/24\",\r\n            \"vlan\": \"external\",\r\n            \"allowService\": \"none\",\r\n            \"trafficGroup\": \"traffic-group-local-only\"\r\n        },\r\n        \"default\": {\r\n            \"class\": \"Route\",\r\n            \"gw\": \"10.1.10.2\",\r\n            \"network\": \"default\",\r\n            \"mtu\": 1500\r\n        }\r\n    }\r\n}"
+						},
+						"url": {
+							"raw": "https://{{bigip1}}/mgmt/shared/declarative-onboarding",
+							"protocol": "https",
+							"host": [
+								"{{bigip1}}"
+							],
+							"path": [
+								"mgmt",
+								"shared",
+								"declarative-onboarding"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Lab 3 - Application Services 3 (AS3)",
+			"item": [
+				{
+					"name": "Step 1: Get Installed iControl LX Extensions",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "5e098299-9d1c-4d54-b189-b8d35751507c",
+								"exec": [
+									"eval(postman.getGlobalVariable(\"_f5_workflow_functions\"));",
+									"",
+									"var check_vals = [",
+									"        { ",
+									"            \"path\":\"kind\",",
+									"            \"value\":\"shared:iapp:installed-packages:installedpackagecollectionstate\",",
+									"        }       ",
+									"    ];",
+									"",
+									"f5_check_response(check_vals);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-F5-Auth-Token",
+								"value": "{{bigip_1_auth_token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "https://{{bigip1}}/mgmt/shared/iapp/installed-packages",
+							"protocol": "https",
+							"host": [
+								"{{bigip1}}"
+							],
+							"path": [
+								"mgmt",
+								"shared",
+								"iapp",
+								"installed-packages"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Step 2: Upload AS3 Extension RPM",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "bb38c6e9-0658-458c-be36-3f95d74c9a1c",
+								"exec": [
+									"eval(postman.getGlobalVariable(\"_f5_workflow_functions\"));",
+									"",
+									"var check_vals = [",
+									"        { ",
+									"            \"path\":\"localFilePath\",",
+									"            \"value\":\"/f5-appsvcs-3..*.noarch.rpm$/i\",",
+									"            \"op\":\"regex\"",
+									"        }",
+									"    ];",
+									"",
+									"f5_check_response(check_vals);"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "ec269764-4137-4028-b375-4e6471b42ff9",
+								"exec": [
+									"// Create the value for the Content-Range header based on the file size of the RPM",
+									"// https://devcentral.f5.com/articles/demystifying-icontrol-rest-part-5-transferring-files",
+									"",
+									"var fileLen = parseInt(pm.environment.get(\"as3_filelen\"));",
+									"pm.globals.set(\"_as3_content_range\",\"0-\" + (fileLen - 1) + \"/\" + fileLen);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/octet-stream"
+							},
+							{
+								"key": "Content-Range",
+								"value": "{{_as3_content_range}}"
+							},
+							{
+								"key": "X-F5-Auth-Token",
+								"value": "{{bigip_1_auth_token}}"
+							},
+							{
+								"key": "Connection",
+								"value": "keep-alive"
+							}
+						],
+						"body": {
+							"mode": "file",
+							"file": {}
+						},
+						"url": {
+							"raw": "https://{{bigip1}}/mgmt/shared/file-transfer/uploads/{{as3_filename}}",
+							"protocol": "https",
+							"host": [
+								"{{bigip1}}"
+							],
+							"path": [
+								"mgmt",
+								"shared",
+								"file-transfer",
+								"uploads",
+								"{{as3_filename}}"
+							]
+						},
+						"description": "No funciona con AS3 v3.10"
+					},
+					"response": []
+				},
+				{
+					"name": "Step 3: Create AS3 Extension Install Task",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "a4da1ae5-cea8-48aa-b803-b45a0086508a",
+								"exec": [
+									"eval(postman.getGlobalVariable(\"_f5_workflow_functions\"));",
+									"",
+									"var check_vals = [",
+									"        { ",
+									"            \"path\":\"status\",",
+									"            \"value\":\"CREATED\"",
+									"        }       ",
+									"    ];",
+									"var populate_vars = [",
+									"        { ",
+									"            \"name\":\"_as3_install_uuid\",",
+									"            \"value\":\"id\"",
+									"        }      ",
+									"    ];",
+									"    ",
+									"f5_populate_env_vars(populate_vars);",
+									"f5_check_response(check_vals);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-F5-Auth-Token",
+								"value": "{{bigip_1_auth_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"operation\":\"INSTALL\",\n  \"packageFilePath\":\"/var/config/rest/downloads/{{as3_filename}}\"\n}"
+						},
+						"url": {
+							"raw": "https://{{bigip1}}/mgmt/shared/iapp/package-management-tasks",
+							"protocol": "https",
+							"host": [
+								"{{bigip1}}"
+							],
+							"path": [
+								"mgmt",
+								"shared",
+								"iapp",
+								"package-management-tasks"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Step 4: Get AS3 Install Task Status",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "2cfb16a5-d7b6-4580-9428-93f10b49d6ad",
+								"exec": [
+									"eval(postman.getGlobalVariable(\"_f5_workflow_functions\"));",
+									"",
+									"var check_vals = [",
+									"        { ",
+									"            \"path\":\"status\",",
+									"            \"value\":\"FINISHED\"",
+									"        }       ",
+									"    ];",
+									"",
+									"f5_check_response(check_vals);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-F5-Auth-Token",
+								"value": "{{bigip_1_auth_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "https://{{bigip1}}/mgmt/shared/iapp/package-management-tasks/{{_as3_install_uuid}}",
+							"protocol": "https",
+							"host": [
+								"{{bigip1}}"
+							],
+							"path": [
+								"mgmt",
+								"shared",
+								"iapp",
+								"package-management-tasks",
+								"{{_as3_install_uuid}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Step 5: Get AS3 Version Info",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "72146941-5edf-430b-b687-8e6c3e0b5ecd",
+								"exec": [
+									"eval(postman.getGlobalVariable(\"_f5_workflow_functions\"));",
+									"",
+									"var check_vals = [",
+									"        { ",
+									"            \"path\":\"version\",",
+									"            \"value\":\"/^3./i\",",
+									"            \"op\":\"regex\"",
+									"        }       ",
+									"    ];",
+									"",
+									"f5_check_response(check_vals);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-F5-Auth-Token",
+								"value": "{{bigip_1_auth_token}}"
+							},
+							{
+								"key": "Connection",
+								"value": "keep-alive"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "https://{{bigip1}}/mgmt/shared/appsvcs/info",
+							"protocol": "https",
+							"host": [
+								"{{bigip1}}"
+							],
+							"path": [
+								"mgmt",
+								"shared",
+								"appsvcs",
+								"info"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Step 6a: AS3 Declaration - Simple HTTP App",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "a4da1ae5-cea8-48aa-b803-b45a0086508a",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-F5-Auth-Token",
+								"value": "{{bigip_1_auth_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"class\": \"AS3\",\r\n    \"action\": \"deploy\",\r\n    \"persist\": true,\r\n    \"declaration\": {\r\n        \"class\": \"ADC\",\r\n        \"schemaVersion\": \"3.10.0\",\r\n        \"id\": \"lmnop12345\",\r\n        \"label\": \"GoSmarter\",\r\n        \"remark\": \"An HTTP application\",\r\n        \"controls\": {\r\n            \"trace\": true\r\n        },\r\n        \"ACME_cloud_01\": {\r\n            \"class\": \"Tenant\",\r\n            \"Application1\": {\r\n                \"class\": \"Application\",\r\n                \"template\": \"http\",\r\n                \"serviceMain\": {\r\n                    \"class\": \"Service_HTTP\",\r\n                    \"virtualAddresses\": [\r\n                        \"10.1.10.111\"\r\n                    ],\r\n                    \"pool\": \"pool_app1\"\r\n                },\r\n                \"pool_app1\": {\r\n                    \"class\": \"Pool\",\r\n                    \"monitors\": [\r\n                        \"http\"\r\n                    ],\r\n                    \"members\": [\r\n                        {\r\n                            \"servicePort\": 80,\r\n                            \"serverAddresses\": [\r\n                                \"10.1.20.11\",\r\n                                \"10.1.20.12\"\r\n                            ]\r\n                        }\r\n                    ]\r\n                }\r\n            }\r\n        }\r\n    }\r\n}"
+						},
+						"url": {
+							"raw": "https://{{bigip1}}/mgmt/shared/appsvcs/declare",
+							"protocol": "https",
+							"host": [
+								"{{bigip1}}"
+							],
+							"path": [
+								"mgmt",
+								"shared",
+								"appsvcs",
+								"declare"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Step 6b: PATCH to Modify Simple HTTP App",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "a5278280-d8b1-4192-a6f5-3caaf71c38f0",
+								"exec": [
+									"eval(postman.getGlobalVariable(\"_f5_workflow_functions\"));",
+									"",
+									"var check_vals = [",
+									"        { ",
+									"            \"path\":\"results.0.message\",",
+									"            \"value\":\"/success|no\\ change/\",",
+									"            \"op\":\"regex\"",
+									"        }",
+									"    ];",
+									"",
+									"f5_check_response(check_vals);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "X-F5-Auth-Token",
+								"value": "{{bigip_1_auth_token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "[\n  {\n    \"op\":\"add\",\n    \"path\":\"ACME_cloud_01/Application1/pool_app1/members/1\",\n    \"value\": {\n          \"servicePort\": 80,\n            \"serverAddresses\": [\n              \"10.1.20.13\"\n            ]\n        }\n  }  \n]"
+						},
+						"url": {
+							"raw": "https://{{bigip1}}/mgmt/shared/appsvcs/declare",
+							"protocol": "https",
+							"host": [
+								"{{bigip1}}"
+							],
+							"path": [
+								"mgmt",
+								"shared",
+								"appsvcs",
+								"declare"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Step 7: AS3 Declaration - Generic HTTP & TCP Apps",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "a4da1ae5-cea8-48aa-b803-b45a0086508a",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-F5-Auth-Token",
+								"value": "{{bigip_1_auth_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"class\": \"AS3\",\n    \"action\": \"deploy\",\n    \"persist\": true,\n    \"declaration\": {\n       \"class\": \"ADC\",\n       \"schemaVersion\": \"3.0.0\",\n       \"id\": \"lmnop23456\",\n       \"label\": \"GoSmarter\",\n       \"remark\": \"Generic HTTP applications\",\n       \"ACME_cloud_02\": {\n          \"class\": \"Tenant\",\n          \"vs_Application_http_80\": {\n             \"class\": \"Application\",\n             \"template\": \"generic\",\n             \"vs_Application_http_80\": {\n                \"class\": \"Service_HTTP\",\n                \"virtualAddresses\": [\n                   \"10.1.10.112\"\n                ],\n                \"pool\": \"web_pool1\",\n                \"virtualPort\": 80\n             },\n             \"web_pool1\": {\n                \"class\": \"Pool\",\n                \"monitors\": [\n                   \"http\",\n                   \"tcp\"\n                ],\n                \"members\": [{\n                   \"servicePort\": 80,\n                   \"serverAddresses\": [\n                      \"10.1.20.17\"\n                   ]\n                }]\n             }\n          },\n          \"vs_Application_tcp\": {\n            \"class\": \"Application\",\n            \"template\": \"generic\",\n            \"vs_Application_tcp\": {\n               \"class\": \"Service_TCP\",\n               \"virtualAddresses\": [\n                  \"10.1.10.113\"\n               ],\n               \"pool\": \"tcp_pool\",\n               \"virtualPort\": 5900\n            },\n            \"tcp_pool\": {\n               \"class\": \"Pool\",\n               \"monitors\": [\n                  \"tcp\"\n               ],\n               \"members\": [{\n                  \"servicePort\": 5900,\n                  \"serverAddresses\": [\n                     \"10.1.20.252\"\n                  ]\n               }]\n            }\n         }\n       }\n    }\n}"
+						},
+						"url": {
+							"raw": "https://{{bigip1}}/mgmt/shared/appsvcs/declare",
+							"protocol": "https",
+							"host": [
+								"{{bigip1}}"
+							],
+							"path": [
+								"mgmt",
+								"shared",
+								"appsvcs",
+								"declare"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Step 8: AS3 Declaration - HTTPS App w/cert",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "a4da1ae5-cea8-48aa-b803-b45a0086508a",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-F5-Auth-Token",
+								"value": "{{bigip_1_auth_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"class\": \"AS3\",\r\n    \"action\": \"deploy\",\r\n    \"persist\": true,\r\n    \"declaration\": {\r\n        \"class\": \"ADC\",\r\n        \"schemaVersion\": \"3.10.0\",\r\n        \"id\": \"lmnop34567\",\r\n        \"label\": \"GoSmarter\",\r\n        \"remark\": \"HTTPS application\",\r\n        \"controls\": {\r\n            \"trace\": true\r\n        },\r\n        \"ACME_cloud_03\": {\r\n            \"class\": \"Tenant\",\r\n            \"Application_03\": {\r\n                \"class\": \"Application\",\r\n                \"template\": \"https\",\r\n                \"serviceMain\": {\r\n                    \"class\": \"Service_HTTPS\",\r\n                    \"virtualAddresses\": [\r\n                        \"10.1.10.114\"\r\n                    ],\r\n                    \"pool\": \"https_pool\",\r\n                    \"serverTLS\": \"frontside\",\r\n                    \"clientTLS\": \"backside\"\r\n                },\r\n                \"https_pool\": {\r\n                    \"class\": \"Pool\",\r\n                    \"monitors\": [\r\n                        \"http\"\r\n                    ],\r\n                    \"members\": [\r\n                        {\r\n                            \"servicePort\": 443,\r\n                            \"serverAddresses\": [\r\n                                \"10.1.20.16\"\r\n                            ],\r\n                            \"shareNodes\": true\r\n                        }\r\n                    ]\r\n                },\r\n\t\t\t\t\"frontside\": {\r\n\t\t\t\t\t\"class\": \"TLS_Server\",\r\n\t\t\t\t\t\"certificates\": [\r\n\t\t\t\t\t\t{\r\n\t\t\t\t\t\t\t\"certificate\": \"webcert\"\r\n\t\t\t\t\t\t}\r\n\t\t\t\t\t\t]\r\n\t\t\t\t},\r\n\t\t\t\t\"backside\": {\r\n\t\t\t\t\t\"class\": \"TLS_Client\"\r\n\t\t\t\t},\r\n                \"webcert\": {\r\n                    \"class\": \"Certificate\",\r\n                    \"remark\": \"in practice we recommend using a passphrase\",\r\n                    \"certificate\": \"-----BEGIN CERTIFICATE-----\\nMIICnDCCAgWgAwIBAgIJAJ5n2b0OCEjwMA0GCSqGSIb3DQEBCwUAMGcxCzAJBgNVBAYTAlVTMRMwEQYDVQQIDApXYXNoaW5ndG9uMRAwDgYDVQQHDAdTZWF0dGxlMRQwEgYDVQQKDAtmNV9OZXR3b3JrczEbMBkGA1UEAwwSc2FtcGxlLmV4YW1wbGUubmV0MB4XDTE3MTEyNjE5NTAyNFoXDTE4MDIyNTE5NTAyNFowZzELMAkGA1UEBhMCVVMxEzARBgNVBAgMCldhc2hpbmd0b24xEDAOBgNVBAcMB1NlYXR0bGUxFDASBgNVBAoMC2Y1X05ldHdvcmtzMRswGQYDVQQDDBJzYW1wbGUuZXhhbXBsZS5uZXQwgZ8wDQYJKoZIhvcNAQEBBQADgY0AMIGJAoGBALEsuXmSXVQpYjrZPW+WiTBjn491mwZYT7Q92V1HlSBtM6WdWlK1aZN5sovfKtOX7Yrm8xa+e4o/zJ2QYLyyv5O+t2EGN/4qUEjEAPY9mwJdfzRQy6Hyzm84J0QkTuUJ/EjNuPji3D0QJRALUTzu1UqqDCEtiN9OGyXEkh7uvb7BAgMBAAGjUDBOMB0GA1UdDgQWBBSVHPNrGWrjWyZvckQxFYWO59FRFjAfBgNVHSMEGDAWgBSVHPNrGWrjWyZvckQxFYWO59FRFjAMBgNVHRMEBTADAQH/MA0GCSqGSIb3DQEBCwUAA4GBAJeJ9SEckEwPhkXOm+IuqfbUS/RcziifBCTmVyE+Fa/j9pKSYTgiEBNdbJeBEa+gPMlQtbV7Y2dy8TKx/8axVBHiXC5geDML7caxOrAyHYBpnx690xJTh5OIORBBM/a/NvaR+P3CoVebr/NPRh9oRNxnntnqvqD7SW0U3ZPe3tJc\\n-----END CERTIFICATE-----\",\r\n                    \"privateKey\": \"-----BEGIN RSA PRIVATE KEY-----\\nProc-Type: 4,ENCRYPTED\\nDEK-Info: AES-256-CBC,D8FFCE6B255601587CB54EC29B737D31\\n\\nkv4Fc3Jn0Ujkj0yRjt+gQQfBLSNF2aRLUENXnlr7Xpzqu0Ahr3jS1bAAnd8IWnsR\\nyILqVmKsYF2DoHh0tWiEAQ7/y/fe5DTFhK7N4Wml6kp2yVMkP6KC4ssyYPw27kjK\\nDBwBZ5O8Ioej08A5sgsLCmglbmtSPHJUn14pQnMTmLOpEtOsu6S+2ibPgSNpdg0b\\nCAJNG/KHe+Vkx59qNDyDeKb7FZOlsX30+y67zUq9GQqJEDuysPJ2BUNP0IJXAjst\\nFIt1qNoZew+5KDYs7u/lPxcMGTirUhgI84Jy4WcDvSOsP/tKlxj04TbIE3epmSKy\\n+TihHkwY7ngIGtcm3Sfqk5jz2RXoj1/Ac3SW8kVTYaOUogBhn7zAq4Wju6Et4hQG\\nRGapsJp1aCeZ/a4RCDTxspcKoMaRa97/URQb0hBRGx3DGUhzpmX9zl7JI2Xa5D3R\\nmdBXtjLKYJTdIMdd27prBEKhMUpae2rz5Mw4J907wZeBq/wu+zp8LAnecfTe2nGY\\nE32x1U7gSEdYOGqnwxsOexb1jKgCa67Nw9TmcMPV8zmH7R9qdvgxAbAtwBl1F9OS\\nfcGaC7epf1AjJLtaX7krWmzgASHl28Ynh9lmGMdv+5QYMZvKG0LOg/n3m8uJ6sKy\\nIzzvaJswwn0j5P5+czyoV5CvvdCfKnNb+3jUEN8I0PPwjBGKr4B1ojwhogTM248V\\nHR69D6TxFVMfGpyJhCPkbGEGbpEpcffpgKuC/mEtMqyDQXJNaV5HO6HgAJ9F1P6v\\n5ehHHTMRvzCCFiwndHdlMXUjqSNjww6me6dr6LiAPbejdzhL2vWx1YqebOcwQx3G\\n-----END RSA PRIVATE KEY-----\",\r\n                    \"passphrase\": {\r\n                        \"ciphertext\": \"ZjVmNQ==\",\r\n                        \"protected\": \"eyJhbGciOiJkaXIiLCJlbmMiOiJub25lIn0\"\r\n                    }\r\n                }\r\n            }\r\n        }\r\n    }\r\n}"
+						},
+						"url": {
+							"raw": "https://{{bigip1}}/mgmt/shared/appsvcs/declare",
+							"protocol": "https",
+							"host": [
+								"{{bigip1}}"
+							],
+							"path": [
+								"mgmt",
+								"shared",
+								"appsvcs",
+								"declare"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Step 9a: AS3 Declaration HTTPS App + WAF Policy",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "a4da1ae5-cea8-48aa-b803-b45a0086508a",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-F5-Auth-Token",
+								"value": "{{bigip_1_auth_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"$schema\": \"https://raw.githubusercontent.com/F5Networks/f5-appsvcs-extension/master/schema/latest/as3-schema-3.11.0-3.json\",\r\n    \"class\": \"AS3\",\r\n    \"action\": \"deploy\",\r\n    \"persist\": true,\r\n    \"declaration\": {\r\n        \"class\": \"ADC\",\r\n        \"schemaVersion\": \"3.10.0\",\r\n        \"id\": \"lmnop45678\",\r\n        \"label\": \"GoSmarter\",\r\n        \"remark\": \"HTTPS application with WAF Policy\",\r\n        \"controls\": {\r\n            \"trace\": true\r\n        },\r\n        \"ACME_cloud_04\": {\r\n            \"class\": \"Tenant\",\r\n            \"Application_04\": {\r\n                \"class\": \"Application\",\r\n                \"template\": \"https\",\r\n                \"serviceMain\": {\r\n                    \"class\": \"Service_HTTPS\",\r\n                    \"virtualAddresses\": [\r\n                        \"10.1.10.115\"\r\n                    ],\r\n                    \"pool\": \"appsec_pool\",\r\n                    \"securityLogProfiles\": [\r\n                    \t{\r\n                    \t\t\"bigip\": \"/Common/Log all requests\"\r\n                    \t}\r\n                    ],\r\n                    \"policyWAF\": {\r\n                    \t\"use\": \"AcmeWAF\"\r\n                    },\r\n                    \"serverTLS\": \"frontside_appsec\"\r\n                },\r\n                \"appsec_pool\": {\r\n                    \"class\": \"Pool\",\r\n                    \"monitors\": [\r\n                        \"http\"\r\n                    ],\r\n                    \"members\": [\r\n                        {\r\n                            \"servicePort\": 80,\r\n                            \"serverAddresses\": [\r\n                                \"10.1.20.20\"\r\n                            ],\r\n                            \"shareNodes\": true\r\n                        }\r\n                    ]\r\n                },\r\n                \"AcmeWAF\": {\r\n                \t\"class\": \"WAF_Policy\",\r\n                \t\"url\": \"http://10.1.1.252/acme/waf_acme.xml\",\r\n                \t\"ignoreChanges\": true\r\n                },\r\n\t\t\t\t\"frontside_appsec\": {\r\n\t\t\t\t\t\"class\": \"TLS_Server\",\r\n\t\t\t\t\t\"certificates\": [\r\n\t\t\t\t\t\t{\r\n\t\t\t\t\t\t\t\"certificate\": \"webcert_appsec\"\r\n\t\t\t\t\t\t}\r\n\t\t\t\t\t\t]\r\n\t\t\t\t},\r\n                \"webcert_appsec\": {\r\n                    \"class\": \"Certificate\",\r\n                    \"remark\": \"in practice we recommend using a passphrase\",\r\n                    \"certificate\": \"-----BEGIN CERTIFICATE-----\\nMIIDIjCCAgqgAwIBAgIEEZ+6iTANBgkqhkiG9w0BAQsFADBTMQswCQYDVQQGEwJV\\nUzEUMBIGA1UEChMLRjUgTmV0d29ya3MxEjAQBgNVBAsTCUdvU21hcnRlcjEaMBgG\\nA1UEAxMRd2ViYXBwLmY1ZGVtby5jb20wHhcNMTkwNTE2MTMzMDQ5WhcNMjEwNTE1\\nMTMzMDQ5WjBTMQswCQYDVQQGEwJVUzEUMBIGA1UEChMLRjUgTmV0d29ya3MxEjAQ\\nBgNVBAsTCUdvU21hcnRlcjEaMBgGA1UEAxMRd2ViYXBwLmY1ZGVtby5jb20wggEi\\nMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQCzZcc48eMRCrI5QIOprcAInNGH\\nlBMSJACKTSGAaFBLXdzrqdkZC28zpDl7KfbplyNF1rGnkvZPbtPAD1mM39te81fe\\nFpz4cfIE5V+RUiufWnmS5Q/T5I2ct7VMLFJ51DTj6MR3ahA3ePwE1OW4OzNmMEDz\\noZr6u4WFlhh732Nm9vBJfxStULnqVx3Lga0J1GCW5aYMRBxXrU2+U4Tiv+6okTkR\\nMgFjeVmT70GHpvVxllDjibreBlRbrh45LTLvpTLPzteXV2zT3AWohQSN8BjamF2T\\nMwwSzdHEZRPry3b8yVVUgnCnDiatxtEy1uJlvBzN204FiZpWYxwDrkcRYVB7AgMB\\nAAEwDQYJKoZIhvcNAQELBQADggEBABG/4P+e/Tktlqj6sZP301SWv8zHrgx5iqHO\\nqQcud5ZdvepwpS2naXNK9TkarzYrmvt5MZEOg/pUhUkJaKYz1PlM4Hyt+Dpq0pAm\\nLQs8bKZ6n+rr3g3QnnVUXAwjnS37cg8+WdxJuqrhtTDGqutqePhodW6rX4I4ovW/\\n9CP1ffq0e1NVKPzhsXJkXSFv0uJX7nC7PdFFcwHYUnKmYZdWkIcY9SRvToayX8Sd\\nWKjAczPbt56cdZIVRMOpC+GKQaVc01uiCBhD5WlVCKZxR75BD6ulKQ540WnzDxKE\\nOsK93ESA8qcWZblWSuxbPObMaQfYbVzVmSfxGvsKZGktdq6geNo=\\n-----END CERTIFICATE-----\",\r\n                    \"privateKey\": \"-----BEGIN PRIVATE KEY-----\\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQCzZcc48eMRCrI5\\nQIOprcAInNGHlBMSJACKTSGAaFBLXdzrqdkZC28zpDl7KfbplyNF1rGnkvZPbtPA\\nD1mM39te81feFpz4cfIE5V+RUiufWnmS5Q/T5I2ct7VMLFJ51DTj6MR3ahA3ePwE\\n1OW4OzNmMEDzoZr6u4WFlhh732Nm9vBJfxStULnqVx3Lga0J1GCW5aYMRBxXrU2+\\nU4Tiv+6okTkRMgFjeVmT70GHpvVxllDjibreBlRbrh45LTLvpTLPzteXV2zT3AWo\\nhQSN8BjamF2TMwwSzdHEZRPry3b8yVVUgnCnDiatxtEy1uJlvBzN204FiZpWYxwD\\nrkcRYVB7AgMBAAECggEAEYBQ3q/OWJfECkzOa2u9a7mswT7DW4YynUtoBMhoaOnX\\nxw/TU5undhDD4M2XvnMVqFcJDtGKAPbNZpO4x0MBejJgNJTdLGmlVC/yUlGDWvDv\\nIlMBZ8kIvay4XZ2HUEZRAJjxLbslqNu/LlN8s6vm2EXF2F7AKUzI+l7Jta/12RH8\\n0SYLzZ8ccfFiOeVxT3HvV0QcaawGh34pfcOi3U+kaMZVZefnGFis1tKYWZb2ZV5c\\nPpW3U3PDPjeCxIO9jgRZbOhBkhCQWa1oKsibx1U1dYPSfqq/UtRKf8gKv6u+BkLC\\nVdFqWoC+S4/Wk7OPkdWfd28YZwF+kDhyQREchR2AmQKBgQD558pXfuh/Zpwx0H+D\\nifHTGmZFxcvjkbWQ0jEtBtNeQLOGgR8t3pQ7XQADcUAUBQ2lGR5sbP6lEgsMP35B\\nY3w7nybFkWNEtEEUqCLKoGm1O0HiSh4v2W4WBxt9ynJ4vASzNRh04dG8aVHyG8uI\\n30W2J0m0dRb1ZasKt+6Lguy3iQKBgQC3xcsLJ10I14rJQQhmcilF59QYT5TSoPuF\\nv9L1GdOhRCPXgr97R4/YEDzk/VgLyzMjwTYdr24Kdggsa9Gn8UQ8T1xGOTNN5GUS\\nqwammb2IkixWoPDnc9QokSk2XU8TRjPIR0OynpKmmLJeTDFbgu5kC7WAvCgGl0SN\\nHwJG2U+C4wKBgQCAvbptrMFVsKTSvNiUCSJ9YGJDm4xX5h6lRsNysMt/CNHzft1z\\nIfE3S8fP/i3GonvPC8uyi8v7efobCzKduQStKmYs7aM4J6xHWf7iaBVM+gQM8aXv\\nfJHL40l0WjDypdm+AKJixFrqN0+x7EPEdVFSb5b20kNLlF6zHOJVGNOeEQKBgAMI\\ntvN2MOkGdfogorzeQaQv0aadGb3ofn6UzizRwla1Q0o5lGO6qLtOeVLmg9+d+Tgr\\n5nLTBKQTksr49LsrFo9QWBuosholHS4TuMZjX2ez0huUCKYpmWUaEG4fWEDfNdem\\npY17ZLxvZPJ9m4sBPGJWdyaq9JY3RSB3VJhK2i81AoGBANwVq/2H0fo+JjlheEtb\\nWwg6HrPUtBWzOXV5qHyhbbFrA2jPQnN82Lty7UsjTTw2SDYic63OVZs6KL6AKnLW\\nFl1X6LEURQKI3KikgMtve39Xqpr/pz8ueMVGxRQ5FscpFyTfu7X9jy5aeVHwORr1\\nWzqlRmkCz4qghC1wiZYz/sk5\\n-----END PRIVATE KEY-----\"\r\n                }\r\n            }\r\n        }\r\n    }\r\n}"
+						},
+						"url": {
+							"raw": "https://{{bigip1}}/mgmt/shared/appsvcs/declare",
+							"protocol": "https",
+							"host": [
+								"{{bigip1}}"
+							],
+							"path": [
+								"mgmt",
+								"shared",
+								"appsvcs",
+								"declare"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Step 9b: AS3 Declaration HTTPS App + WAF Policy + iRules",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "a4da1ae5-cea8-48aa-b803-b45a0086508a",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-F5-Auth-Token",
+								"value": "{{bigip_1_auth_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"$schema\": \"https://raw.githubusercontent.com/F5Networks/f5-appsvcs-extension/master/schema/latest/as3-schema-3.11.0-3.json\",\r\n    \"class\": \"AS3\",\r\n    \"action\": \"deploy\",\r\n    \"persist\": true,\r\n    \"declaration\": {\r\n        \"class\": \"ADC\",\r\n        \"schemaVersion\": \"3.10.0\",\r\n        \"id\": \"lmnop56789\",\r\n        \"label\": \"GoSmarter\",\r\n        \"remark\": \"HTTPS application with iRules & WAF Policy\",\r\n        \"controls\": {\r\n            \"trace\": true\r\n        },\r\n        \"ACME_cloud_04\": {\r\n            \"class\": \"Tenant\",\r\n            \"Application_04\": {\r\n                \"class\": \"Application\",\r\n                \"template\": \"https\",\r\n                \"serviceMain\": {\r\n                    \"class\": \"Service_HTTPS\",\r\n                    \"virtualAddresses\": [\r\n                        \"10.1.10.115\"\r\n                    ],\r\n\t\t\t\t\t\"profileStream\": {\r\n\t\t\t\t\t\t\"use\": \"streamProfile\"\r\n\t\t\t\t\t},\r\n                    \"pool\": \"appsec_pool\",\r\n                    \"iRules\": [\r\n                    \t\"iRule_InsertHeader\",\r\n                    \t\"iRule_CVE_2017_5638\"\r\n                    ],\r\n                    \"securityLogProfiles\": [\r\n                    \t{\r\n                    \t\t\"bigip\": \"/Common/Log all requests\"\r\n                    \t}\r\n                    ],\r\n                    \"policyWAF\": {\r\n                    \t\"use\": \"AcmeWAF\"\r\n                    },\r\n                    \"serverTLS\": \"frontside_appsec\"\r\n                },\r\n                \"appsec_pool\": {\r\n                    \"class\": \"Pool\",\r\n                    \"monitors\": [\r\n                        \"http\"\r\n                    ],\r\n                    \"members\": [\r\n                        {\r\n                            \"servicePort\": 80,\r\n                            \"serverAddresses\": [\r\n                                \"10.1.20.20\"\r\n                            ],\r\n                            \"shareNodes\": true\r\n                        }\r\n                    ]\r\n                },\r\n\t\t\t\t\"iRule_InsertHeader\": {\r\n\t\t\t\t\t\"class\": \"iRule\",\r\n\t\t\t\t\t\"remark\": \"Insert headers to response\",\r\n\t\t\t\t\t\"iRule\": \"when HTTP_RESPONSE {\\nHTTP::header insert X-CustomHeader [IP::client_addr]\\n HTTP::header replace Server GOSMARTER\\n}\"\r\n\t\t\t\t},\r\n\t\t\t\t\"iRule_CVE_2017_5638\": {\r\n\t\t\t\t\t\"class\": \"iRule\",\r\n\t\t\t\t\t\"iRule\": {\r\n\t\t\t\t\t\t\"iRule\": {\r\n\t\t\t\t\t\t\t\"url\": \"http://10.1.1.252/as3gosmarter/resources/CVE-2017-5638-ApacheStruts2.irule\"\r\n\t\t\t\t\t\t}\r\n\t\t\t\t\t}\r\n\t\t\t\t},                \r\n                \"AcmeWAF\": {\r\n                \t\"class\": \"WAF_Policy\",\r\n                \t\"url\": \"http://10.1.1.252/as3gosmarter/resources/waf_acme.xml\",\r\n                \t\"ignoreChanges\": true\r\n                },\r\n                \"streamProfile\": {\r\n                \t\"class\": \"Stream_Profile\"\r\n                },\r\n\t\t\t\t\"frontside_appsec\": {\r\n\t\t\t\t\t\"class\": \"TLS_Server\",\r\n\t\t\t\t\t\"certificates\": [\r\n\t\t\t\t\t\t{\r\n\t\t\t\t\t\t\t\"certificate\": \"webcert_appsec\"\r\n\t\t\t\t\t\t}\r\n\t\t\t\t\t\t]\r\n\t\t\t\t},\r\n                \"webcert_appsec\": {\r\n                    \"class\": \"Certificate\",\r\n                    \"remark\": \"in practice we recommend using a passphrase\",\r\n                    \"certificate\": \"-----BEGIN CERTIFICATE-----\\nMIIDIjCCAgqgAwIBAgIEEZ+6iTANBgkqhkiG9w0BAQsFADBTMQswCQYDVQQGEwJV\\nUzEUMBIGA1UEChMLRjUgTmV0d29ya3MxEjAQBgNVBAsTCUdvU21hcnRlcjEaMBgG\\nA1UEAxMRd2ViYXBwLmY1ZGVtby5jb20wHhcNMTkwNTE2MTMzMDQ5WhcNMjEwNTE1\\nMTMzMDQ5WjBTMQswCQYDVQQGEwJVUzEUMBIGA1UEChMLRjUgTmV0d29ya3MxEjAQ\\nBgNVBAsTCUdvU21hcnRlcjEaMBgGA1UEAxMRd2ViYXBwLmY1ZGVtby5jb20wggEi\\nMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQCzZcc48eMRCrI5QIOprcAInNGH\\nlBMSJACKTSGAaFBLXdzrqdkZC28zpDl7KfbplyNF1rGnkvZPbtPAD1mM39te81fe\\nFpz4cfIE5V+RUiufWnmS5Q/T5I2ct7VMLFJ51DTj6MR3ahA3ePwE1OW4OzNmMEDz\\noZr6u4WFlhh732Nm9vBJfxStULnqVx3Lga0J1GCW5aYMRBxXrU2+U4Tiv+6okTkR\\nMgFjeVmT70GHpvVxllDjibreBlRbrh45LTLvpTLPzteXV2zT3AWohQSN8BjamF2T\\nMwwSzdHEZRPry3b8yVVUgnCnDiatxtEy1uJlvBzN204FiZpWYxwDrkcRYVB7AgMB\\nAAEwDQYJKoZIhvcNAQELBQADggEBABG/4P+e/Tktlqj6sZP301SWv8zHrgx5iqHO\\nqQcud5ZdvepwpS2naXNK9TkarzYrmvt5MZEOg/pUhUkJaKYz1PlM4Hyt+Dpq0pAm\\nLQs8bKZ6n+rr3g3QnnVUXAwjnS37cg8+WdxJuqrhtTDGqutqePhodW6rX4I4ovW/\\n9CP1ffq0e1NVKPzhsXJkXSFv0uJX7nC7PdFFcwHYUnKmYZdWkIcY9SRvToayX8Sd\\nWKjAczPbt56cdZIVRMOpC+GKQaVc01uiCBhD5WlVCKZxR75BD6ulKQ540WnzDxKE\\nOsK93ESA8qcWZblWSuxbPObMaQfYbVzVmSfxGvsKZGktdq6geNo=\\n-----END CERTIFICATE-----\",\r\n                    \"privateKey\": \"-----BEGIN PRIVATE KEY-----\\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQCzZcc48eMRCrI5\\nQIOprcAInNGHlBMSJACKTSGAaFBLXdzrqdkZC28zpDl7KfbplyNF1rGnkvZPbtPA\\nD1mM39te81feFpz4cfIE5V+RUiufWnmS5Q/T5I2ct7VMLFJ51DTj6MR3ahA3ePwE\\n1OW4OzNmMEDzoZr6u4WFlhh732Nm9vBJfxStULnqVx3Lga0J1GCW5aYMRBxXrU2+\\nU4Tiv+6okTkRMgFjeVmT70GHpvVxllDjibreBlRbrh45LTLvpTLPzteXV2zT3AWo\\nhQSN8BjamF2TMwwSzdHEZRPry3b8yVVUgnCnDiatxtEy1uJlvBzN204FiZpWYxwD\\nrkcRYVB7AgMBAAECggEAEYBQ3q/OWJfECkzOa2u9a7mswT7DW4YynUtoBMhoaOnX\\nxw/TU5undhDD4M2XvnMVqFcJDtGKAPbNZpO4x0MBejJgNJTdLGmlVC/yUlGDWvDv\\nIlMBZ8kIvay4XZ2HUEZRAJjxLbslqNu/LlN8s6vm2EXF2F7AKUzI+l7Jta/12RH8\\n0SYLzZ8ccfFiOeVxT3HvV0QcaawGh34pfcOi3U+kaMZVZefnGFis1tKYWZb2ZV5c\\nPpW3U3PDPjeCxIO9jgRZbOhBkhCQWa1oKsibx1U1dYPSfqq/UtRKf8gKv6u+BkLC\\nVdFqWoC+S4/Wk7OPkdWfd28YZwF+kDhyQREchR2AmQKBgQD558pXfuh/Zpwx0H+D\\nifHTGmZFxcvjkbWQ0jEtBtNeQLOGgR8t3pQ7XQADcUAUBQ2lGR5sbP6lEgsMP35B\\nY3w7nybFkWNEtEEUqCLKoGm1O0HiSh4v2W4WBxt9ynJ4vASzNRh04dG8aVHyG8uI\\n30W2J0m0dRb1ZasKt+6Lguy3iQKBgQC3xcsLJ10I14rJQQhmcilF59QYT5TSoPuF\\nv9L1GdOhRCPXgr97R4/YEDzk/VgLyzMjwTYdr24Kdggsa9Gn8UQ8T1xGOTNN5GUS\\nqwammb2IkixWoPDnc9QokSk2XU8TRjPIR0OynpKmmLJeTDFbgu5kC7WAvCgGl0SN\\nHwJG2U+C4wKBgQCAvbptrMFVsKTSvNiUCSJ9YGJDm4xX5h6lRsNysMt/CNHzft1z\\nIfE3S8fP/i3GonvPC8uyi8v7efobCzKduQStKmYs7aM4J6xHWf7iaBVM+gQM8aXv\\nfJHL40l0WjDypdm+AKJixFrqN0+x7EPEdVFSb5b20kNLlF6zHOJVGNOeEQKBgAMI\\ntvN2MOkGdfogorzeQaQv0aadGb3ofn6UzizRwla1Q0o5lGO6qLtOeVLmg9+d+Tgr\\n5nLTBKQTksr49LsrFo9QWBuosholHS4TuMZjX2ez0huUCKYpmWUaEG4fWEDfNdem\\npY17ZLxvZPJ9m4sBPGJWdyaq9JY3RSB3VJhK2i81AoGBANwVq/2H0fo+JjlheEtb\\nWwg6HrPUtBWzOXV5qHyhbbFrA2jPQnN82Lty7UsjTTw2SDYic63OVZs6KL6AKnLW\\nFl1X6LEURQKI3KikgMtve39Xqpr/pz8ueMVGxRQ5FscpFyTfu7X9jy5aeVHwORr1\\nWzqlRmkCz4qghC1wiZYz/sk5\\n-----END PRIVATE KEY-----\"\r\n                }\r\n            }\r\n        }\r\n    }\r\n}"
+						},
+						"url": {
+							"raw": "https://{{bigip1}}/mgmt/shared/appsvcs/declare",
+							"protocol": "https",
+							"host": [
+								"{{bigip1}}"
+							],
+							"path": [
+								"mgmt",
+								"shared",
+								"appsvcs",
+								"declare"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Step 10: Remove Services created w/AS3",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "a4da1ae5-cea8-48aa-b803-b45a0086508a",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-F5-Auth-Token",
+								"value": "{{bigip_1_auth_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"$schema\": \"https://raw.githubusercontent.com/F5Networks/f5-appsvcs-extension/master/schema/latest/as3-schema-3.10.0-5.json\",\r\n    \"class\": \"AS3\",\r\n    \"action\": \"deploy\",\r\n    \"persist\": true,\r\n    \"declaration\": {\r\n        \"class\": \"ADC\",\r\n        \"schemaVersion\": \"3.10.0\",\r\n        \"id\": \"lmnop12345\",\r\n        \"label\": \"GoSmarter\",\r\n        \"remark\": \"An HTTP and an HTTPS application\",\r\n        \"controls\": {\r\n            \"trace\": true\r\n        },\r\n        \"ACME_cloud_01\": {\r\n            \"class\": \"Tenant\"\r\n        }\r\n    }\r\n}"
+						},
+						"url": {
+							"raw": "https://{{bigip1}}/mgmt/shared/appsvcs/declare",
+							"protocol": "https",
+							"host": [
+								"{{bigip1}}"
+							],
+							"path": [
+								"mgmt",
+								"shared",
+								"appsvcs",
+								"declare"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Step 11: Remove all AS3 Services",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "a4da1ae5-cea8-48aa-b803-b45a0086508a",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-F5-Auth-Token",
+								"value": "{{bigip_1_auth_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "https://{{bigip1}}/mgmt/shared/appsvcs/declare",
+							"protocol": "https",
+							"host": [
+								"{{bigip1}}"
+							],
+							"path": [
+								"mgmt",
+								"shared",
+								"appsvcs",
+								"declare"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Lab 4 - Telemetry Streaming (TS)",
+			"item": [
+				{
+					"name": "Step 1: Get Installed iControl LX Extensions",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "5e098299-9d1c-4d54-b189-b8d35751507c",
+								"exec": [
+									"eval(postman.getGlobalVariable(\"_f5_workflow_functions\"));",
+									"",
+									"var check_vals = [",
+									"        { ",
+									"            \"path\":\"kind\",",
+									"            \"value\":\"shared:iapp:installed-packages:installedpackagecollectionstate\",",
+									"        }       ",
+									"    ];",
+									"",
+									"f5_check_response(check_vals);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-F5-Auth-Token",
+								"value": "{{bigip_1_auth_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "https://{{bigip1}}/mgmt/shared/iapp/installed-packages",
+							"protocol": "https",
+							"host": [
+								"{{bigip1}}"
+							],
+							"path": [
+								"mgmt",
+								"shared",
+								"iapp",
+								"installed-packages"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Step 2: Upload TS Extension RPM",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "bb38c6e9-0658-458c-be36-3f95d74c9a1c",
+								"exec": [
+									"eval(postman.getGlobalVariable(\"_f5_workflow_functions\"));",
+									"",
+									"var check_vals = [",
+									"        { ",
+									"            \"path\":\"localFilePath\",",
+									"            \"value\":\"/f5-telemetry-1..*.noarch.rpm$/i\",",
+									"            \"op\":\"regex\"",
+									"        }",
+									"    ];",
+									"",
+									"f5_check_response(check_vals);"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "ec269764-4137-4028-b375-4e6471b42ff9",
+								"exec": [
+									"// Create the value for the Content-Range header based on the file size of the RPM",
+									"// https://devcentral.f5.com/articles/demystifying-icontrol-rest-part-5-transferring-files",
+									"",
+									"var fileLen = parseInt(pm.environment.get(\"ts_filelen\"));",
+									"pm.globals.set(\"_ts_content_range\",\"0-\" + (fileLen - 1) + \"/\" + fileLen);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/octet-stream"
+							},
+							{
+								"key": "Content-Range",
+								"value": "{{_ts_content_range}}"
+							},
+							{
+								"key": "X-F5-Auth-Token",
+								"value": "{{bigip_1_auth_token}}"
+							},
+							{
+								"key": "Connection",
+								"value": "keep-alive"
+							}
+						],
+						"body": {
+							"mode": "file",
+							"file": {}
+						},
+						"url": {
+							"raw": "https://{{bigip1}}/mgmt/shared/file-transfer/uploads/{{ts_filename}}",
+							"protocol": "https",
+							"host": [
+								"{{bigip1}}"
+							],
+							"path": [
+								"mgmt",
+								"shared",
+								"file-transfer",
+								"uploads",
+								"{{ts_filename}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Step 3: Create TS Extension Install Task",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "a4da1ae5-cea8-48aa-b803-b45a0086508a",
+								"exec": [
+									"eval(postman.getGlobalVariable(\"_f5_workflow_functions\"));",
+									"",
+									"var check_vals = [",
+									"        { ",
+									"            \"path\":\"status\",",
+									"            \"value\":\"CREATED\"",
+									"        }       ",
+									"    ];",
+									"var populate_vars = [",
+									"        { ",
+									"            \"name\":\"_ts_install_uuid\",",
+									"            \"value\":\"id\"",
+									"        }      ",
+									"    ];",
+									"    ",
+									"f5_populate_env_vars(populate_vars);",
+									"f5_check_response(check_vals);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-F5-Auth-Token",
+								"value": "{{bigip_1_auth_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"operation\":\"INSTALL\",\n  \"packageFilePath\":\"/var/config/rest/downloads/{{ts_filename}}\"\n}"
+						},
+						"url": {
+							"raw": "https://{{bigip1}}/mgmt/shared/iapp/package-management-tasks",
+							"protocol": "https",
+							"host": [
+								"{{bigip1}}"
+							],
+							"path": [
+								"mgmt",
+								"shared",
+								"iapp",
+								"package-management-tasks"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Step 4: Get TS Install Task Status",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "2cfb16a5-d7b6-4580-9428-93f10b49d6ad",
+								"exec": [
+									"eval(postman.getGlobalVariable(\"_f5_workflow_functions\"));",
+									"",
+									"var check_vals = [",
+									"        { ",
+									"            \"path\":\"status\",",
+									"            \"value\":\"FINISHED\"",
+									"        }       ",
+									"    ];",
+									"",
+									"f5_check_response(check_vals);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-F5-Auth-Token",
+								"value": "{{bigip_1_auth_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "https://{{bigip1}}/mgmt/shared/iapp/package-management-tasks/{{_ts_install_uuid}}",
+							"protocol": "https",
+							"host": [
+								"{{bigip1}}"
+							],
+							"path": [
+								"mgmt",
+								"shared",
+								"iapp",
+								"package-management-tasks",
+								"{{_ts_install_uuid}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Step 5: Get TS Version Info",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "72146941-5edf-430b-b687-8e6c3e0b5ecd",
+								"exec": [
+									"eval(postman.getGlobalVariable(\"_f5_workflow_functions\"));",
+									"",
+									"var check_vals = [",
+									"        { ",
+									"            \"path\":\"version\",",
+									"            \"value\":\"/^1./i\",",
+									"            \"op\":\"regex\"",
+									"        }       ",
+									"    ];",
+									"",
+									"f5_check_response(check_vals);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-F5-Auth-Token",
+								"value": "{{bigip_1_auth_token}}"
+							},
+							{
+								"key": "Connection",
+								"value": "keep-alive"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "https://{{bigip1}}/mgmt/shared/telemetry/info",
+							"protocol": "https",
+							"host": [
+								"{{bigip1}}"
+							],
+							"path": [
+								"mgmt",
+								"shared",
+								"telemetry",
+								"info"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Step 6a: TS Declaration BIGIP1 - Kafka",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "a4da1ae5-cea8-48aa-b803-b45a0086508a",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-F5-Auth-Token",
+								"value": "{{bigip_1_auth_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"$schema\": \"https://raw.githubusercontent.com/F5Networks/f5-telemetry-streaming/master/src/nodejs/schema/base_schema.json\",\n    \"class\": \"Telemetry\",\n    \"controls\": {\n        \"class\": \"Controls\",\n        \"logLevel\": \"info\"\n    },\n    \"My_Poller\": {\n        \"class\": \"Telemetry_System_Poller\",\n        \"interval\": 60\n    },\n    \"My_Listener\": {\n        \"class\": \"Telemetry_Listener\",\n        \"port\": 6514\n    },\n     \"My_Consumer\": {\n         \"class\": \"Telemetry_Consumer\",\n         \"type\": \"Kafka\",\n         \"host\": \"192.0.2.1\",\n         \"protocol\": \"binaryTcpTls\",\n         \"port\": \"9092\",\n         \"topic\": \"f5-telemetry\",\n         \"authenticationProtocol\": \"SASL-PLAIN\",\n         \"username\": \"username\",\n         \"passphrase\": {\n             \"cipherText\": \"secretKey\"\n         }\n     }\n}"
+						},
+						"url": {
+							"raw": "https://{{bigip1}}/mgmt/shared/telemetry/declare",
+							"protocol": "https",
+							"host": [
+								"{{bigip1}}"
+							],
+							"path": [
+								"mgmt",
+								"shared",
+								"telemetry",
+								"declare"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Step 6b: TS Declaration BIGIP1 - Splunk",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "a4da1ae5-cea8-48aa-b803-b45a0086508a",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-F5-Auth-Token",
+								"value": "{{bigip_1_auth_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"$schema\": \"https://raw.githubusercontent.com/F5Networks/f5-telemetry-streaming/master/src/nodejs/schema/base_schema.json\",\n    \"class\": \"Telemetry\",\n    \"controls\": {\n        \"class\": \"Controls\",\n        \"logLevel\": \"info\"\n    },\n    \"My_Poller\": {\n        \"class\": \"Telemetry_System_Poller\",\n        \"interval\": 60\n    },\n    \"My_Listener\": {\n        \"class\": \"Telemetry_Listener\",\n        \"port\": 6514\n    },\n     \"My_Consumer\": {\n         \"class\": \"Telemetry_Consumer\",\n         \"type\": \"Splunk\",\n         \"host\": \"192.0.2.1\",\n         \"protocol\": \"https\",\n         \"port\": \"8088\",\n         \"passphrase\": {\n             \"cipherText\": \"apikey\"\n         }\n     }\n}"
+						},
+						"url": {
+							"raw": "https://{{bigip1}}/mgmt/shared/telemetry/declare",
+							"protocol": "https",
+							"host": [
+								"{{bigip1}}"
+							],
+							"path": [
+								"mgmt",
+								"shared",
+								"telemetry",
+								"declare"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "6d75e112-93b6-45bb-b6f6-3a70d6724a0a",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "16cc20b4-c98c-4913-8670-65caacab136c",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "basic",
+		"basic": [
+			{
+				"key": "password",
+				"value": "admin",
+				"type": "string"
+			},
+			{
+				"key": "username",
+				"value": "admin",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "b41a6697-f0c3-42a4-b1b2-11ff7b27ed44",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "d62f844a-0290-4b76-b178-01d7d2e13af3",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}
