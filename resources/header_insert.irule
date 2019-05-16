@@ -1,6 +1,6 @@
 when HTTP_RESPONSE {
 
-HTTP::header insert X-CarlosAV [IP::client_addr]
-HTTP::header replace Server PEPITO
+HTTP::header insert X-CustomHeader [IP::client_addr]
+HTTP::header replace Server GOSMARTER
 
 }
