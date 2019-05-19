@@ -11,6 +11,7 @@
       user: admin
       validate_certs: no
       server_port: 443
+      timeout: 60
 
   tasks:
     - name: Remove tenant from AS3 configurations
