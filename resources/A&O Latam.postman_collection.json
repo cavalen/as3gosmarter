@@ -1796,7 +1796,116 @@
 					"response": []
 				},
 				{
-					"name": "Step 10: Remove Services created w/AS3",
+					"name": "Step 10: Get All info about Declaration",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "72146941-5edf-430b-b687-8e6c3e0b5ecd",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-F5-Auth-Token",
+								"value": "{{bigip_1_auth_token}}"
+							},
+							{
+								"key": "Connection",
+								"value": "keep-alive"
+							}
+						],
+						"url": {
+							"raw": "https://{{bigip1}}/mgmt/shared/appsvcs/declare",
+							"protocol": "https",
+							"host": [
+								"{{bigip1}}"
+							],
+							"path": [
+								"mgmt",
+								"shared",
+								"appsvcs",
+								"declare"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Step 11: Remove part of a Declaration (VS)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "72146941-5edf-430b-b687-8e6c3e0b5ecd",
+								"exec": [
+									"eval(postman.getGlobalVariable(\"_f5_workflow_functions\"));",
+									"",
+									"var check_vals = [",
+									"        { ",
+									"            \"path\":\"version\",",
+									"            \"value\":\"/^3./i\",",
+									"            \"op\":\"regex\"",
+									"        }       ",
+									"    ];",
+									"",
+									"f5_check_response(check_vals);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "X-F5-Auth-Token",
+								"value": "{{bigip_1_auth_token}}"
+							},
+							{
+								"key": "Connection",
+								"value": "keep-alive"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "[\r\n  {\r\n    \"op\":\"remove\",\r\n    \"path\":\"/ACME_cloud_02/vs_Application_tcp\"\r\n  }  \r\n]"
+						},
+						"url": {
+							"raw": "https://{{bigip1}}/mgmt/shared/appsvcs/declare",
+							"protocol": "https",
+							"host": [
+								"{{bigip1}}"
+							],
+							"path": [
+								"mgmt",
+								"shared",
+								"appsvcs",
+								"declare"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Step 11: Remove a Tenant created w/AS3",
 					"event": [
 						{
 							"listen": "test",
@@ -1842,7 +1951,7 @@
 					"response": []
 				},
 				{
-					"name": "Step 11: Remove all AS3 Services",
+					"name": "Step 12: Remove all AS3 Services",
 					"event": [
 						{
 							"listen": "test",
@@ -2302,6 +2411,119 @@
 					"listen": "test",
 					"script": {
 						"id": "16cc20b4-c98c-4913-8670-65caacab136c",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Lab 5 - Ansible AS3",
+			"item": [
+				{
+					"name": "Paso 1: Playbook para crear una App Basica",
+					"request": {
+						"method": "VIEW",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "---\n\n- name: Create a VIP, pool and pool members\n  hosts: all\n  connection: local\n\n  vars:\n    provider:\n      password: admin\n      server: 10.1.1.245\n      user: admin\n      validate_certs: no\n      server_port: 443\n\n  tasks:\n    - name: Create a pool\n      bigip_pool:\n        provider: \"{{ provider }}\"\n        lb_method: ratio-member\n        name: pool_web_ansible\n        slow_ramp_time: 120\n      delegate_to: localhost\n\n    - name: Add members to pool\n      bigip_pool_member:\n        provider: \"{{ provider }}\"\n        description: \"webserver {{ item.name }}\"\n        host: \"{{ item.host }}\"\n        name: \"{{ item.name }}\"\n        pool: pool_web_ansible\n        port: 80\n      with_items:\n        - host: 10.1.20.10\n          name: web01\n        - host: 10.1.20.12\n          name: web02\n      delegate_to: localhost\n\n    - name: Create a VIP\n      bigip_virtual_server:\n        provider: \"{{ provider }}\"\n        description: foo-vip\n        destination: 10.1.10.222\n        name: vip_web_ansible\n        pool: pool_web_ansible\n        port: 80\n        snat: Automap\n        profiles:\n          - http\n          - clientssl\n      delegate_to: localhost"
+						},
+						"url": {
+							"raw": ""
+						},
+						"description": "Ir a server Linux Ubuntu\nCorrer ansible-playbook -i inventory/hosts playbook1.yaml\nVerificar el BIG-IP"
+					},
+					"response": []
+				},
+				{
+					"name": "Paso 2: Playbook para borrar la App Basica",
+					"request": {
+						"method": "VIEW",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "---\n\n- name: Remove VIP, pool, pool members and nodes\n  hosts: all\n  connection: local\n\n  vars:\n    provider:\n      password: admin\n      server: 10.1.1.245\n      user: admin\n      validate_certs: no\n      server_port: 443\n\n  tasks:\n    - name: Destroy a VIP\n      bigip_virtual_server:\n        provider: \"{{ provider }}\"\n        name: vip_web_ansible\n        state: absent\n      delegate_to: localhost\n\n    - name: Destroy a pool\n      bigip_pool:\n        provider: \"{{ provider }}\"\n        name: pool_web_ansible\n        state: absent\n      delegate_to: localhost\n\n    - name: Delete nodes\n      bigip_node:\n        provider: \"{{ provider }}\"\n        name: \"{{ item }}\"\n        state: absent\n      loop:\n        - web01\n        - web02\n      delegate_to: localhost"
+						},
+						"url": {
+							"raw": ""
+						},
+						"description": "Ir a server Linux Ubuntu\nansible-playbook -i inventory/hosts undo-playbook1.yaml\nVerificar el BIG-IP"
+					},
+					"response": []
+				},
+				{
+					"name": "Paso 3: Playbook para crear App con AS3",
+					"request": {
+						"method": "VIEW",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "---\n\n- name: Deploy an App using AS3\n  hosts: all\n  connection: local\n\n  vars:\n    provider:\n      password: admin\n      server: 10.1.1.245\n      user: admin\n      validate_certs: no\n      server_port: 443\n      timeout: 60\n\n  tasks:\n    - name: Deploy an AS3 configuration\n      bigip_appsvcs_extension:\n        content: \"{{ lookup('file', '{{ playbook_dir }}/ansible-as3.json') }}\"\n        state: present\n        provider: \"{{ provider }}\"\n      delegate_to: localhost\n\n    - name: Save the running configuration of the BIG-IP\n      bigip_config:\n        save: yes\n        provider: \"{{ provider }}\"\n      delegate_to: localhost"
+						},
+						"url": {
+							"raw": ""
+						},
+						"description": "Ir a server Linux Ubuntu\nansible-playbook -i inventory/hosts playbook-as3.yaml\nVerificar el BIG-IP"
+					},
+					"response": []
+				},
+				{
+					"name": "Paso 4: Playbook para borrar App con AS3",
+					"request": {
+						"method": "VIEW",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "---\n\n- name: Remove a Tenant using AS3\n  hosts: all\n  connection: local\n\n  vars:\n    provider:\n      password: admin\n      server: 10.1.1.245\n      user: admin\n      validate_certs: no\n      server_port: 443\n      timeout: 60\n\n  tasks:\n    - name: Remove tenant from AS3 configurations\n      bigip_appsvcs_extension:\n        tenants:\n        - ACME_cloud_ANSIBLE\n        state: absent\n        provider: \"{{ provider }}\"\n      delegate_to: localhost"
+						},
+						"url": {
+							"raw": ""
+						},
+						"description": "Ir a server Linux Ubuntu\nansible-playbook -i inventory/hosts playbook-as3.yaml\nVerificar el BIG-IP"
+					},
+					"response": []
+				},
+				{
+					"name": "Paso 4: Validar las declaraciones existentes en el BIG-IP",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://{{bigip1}}/mgmt/shared/appsvcs/declare",
+							"protocol": "https",
+							"host": [
+								"{{bigip1}}"
+							],
+							"path": [
+								"mgmt",
+								"shared",
+								"appsvcs",
+								"declare"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "Ansible 2.8 min.\n\nDeclaracion para Ansible: ansible-as3.json\n\n{\n    \"class\": \"AS3\",\n    \"action\": \"deploy\",\n    \"persist\": true,\n    \"declaration\": {\n       \"class\": \"ADC\",\n       \"schemaVersion\": \"3.0.0\",\n       \"id\": \"lmnopq23456\",\n       \"label\": \"GoSmarter\",\n       \"remark\": \"Generic HTTP application using Ansible\",\n       \"ACME_cloud_ANSIBLE\": {\n          \"class\": \"Tenant\",\n          \"vs_Ansible_http_80\": {\n             \"class\": \"Application\",\n             \"template\": \"generic\",\n             \"vs_Ansible_http_80\": {\n                \"class\": \"Service_HTTP\",\n                \"virtualAddresses\": [\n                   \"10.1.10.116\"\n                ],\n                \"pool\": \"web_pool_ans\",\n                \"virtualPort\": 80\n             },\n             \"web_pool_ans\": {\n                \"class\": \"Pool\",\n                \"monitors\": [\n                   \"http\"\n                ],\n                \"members\": [{\n                   \"servicePort\": 80,\n                   \"serverAddresses\": [\n                      \"10.1.20.11\"\n                   ]\n                }]\n             }\n          }\n       }\n    }\n}",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "05dd4357-2b5d-4998-ad09-2cf1c0e00ab3",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "a858d195-cbdd-4a8e-a547-ec099e5e3f04",
 						"type": "text/javascript",
 						"exec": [
 							""
