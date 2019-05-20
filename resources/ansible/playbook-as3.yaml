@@ -20,9 +20,3 @@
         state: present
         provider: "{{ provider }}" 
       delegate_to: localhost
-
-    - name: Save the running configuration of the BIG-IP
-      bigip_config:
-        save: yes
-        provider: "{{ provider }}"
-      delegate_to: localhost
