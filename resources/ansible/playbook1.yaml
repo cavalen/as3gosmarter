@@ -31,7 +31,7 @@
         pool: pool_web_ansible
         port: 80
       with_items:
-        - host: 10.1.20.10
+        - host: 10.1.20.11
           name: web01
         - host: 10.1.20.12
           name: web02
