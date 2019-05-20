@@ -2110,7 +2110,7 @@
 						"body": {
 							"mode": "file",
 							"file": {
-								"src": "/Users/valencia/Dropbox/F5/Cloud/Telemetry Streaming/f5-telemetry-1.3.0-0.noarch.rpm"
+								"src": ""
 							}
 						},
 						"url": {
@@ -2331,7 +2331,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"$schema\": \"https://raw.githubusercontent.com/F5Networks/f5-telemetry-streaming/master/src/nodejs/schema/base_schema.json\",\n    \"class\": \"Telemetry\",\n    \"controls\": {\n        \"class\": \"Controls\",\n        \"logLevel\": \"info\"\n    },\n    \"My_Poller\": {\n        \"class\": \"Telemetry_System_Poller\",\n        \"interval\": 60\n    },\n    \"My_Listener\": {\n        \"class\": \"Telemetry_Listener\",\n        \"port\": 6514\n    },\n    \"My_Consumer\": {\n        \"class\": \"Telemetry_Consumer\",\n        \"type\": \"Kafka\",\n        \"host\": \"10.1.10.50\",\n        \"protocol\": \"binaryTcp\",\n        \"port\": 9092,\n        \"topic\": \"f5-telemetry\"\n    }\n}"
+							"raw": "{\n    \"$schema\": \"https://raw.githubusercontent.com/F5Networks/f5-telemetry-streaming/master/src/nodejs/schema/base_schema.json\",\n    \"class\": \"Telemetry\",\n    \"controls\": {\n        \"class\": \"Controls\",\n        \"logLevel\": \"info\"\n    },\n    \"My_Poller\": {\n        \"class\": \"Telemetry_System_Poller\",\n        \"interval\": 60\n    },\n    \"My_Listener\": {\n        \"class\": \"Telemetry_Listener\",\n        \"port\": 6514\n    },\n    \"My_Consumer\": {\n        \"class\": \"Telemetry_Consumer\",\n        \"type\": \"Kafka\",\n        \"host\": \"10.1.10.80\",\n        \"protocol\": \"binaryTcp\",\n        \"port\": 9092,\n        \"topic\": \"f5-telemetry\"\n    }\n}"
 						},
 						"url": {
 							"raw": "https://{{bigip1}}/mgmt/shared/telemetry/declare",
@@ -2402,7 +2402,7 @@
 					"response": []
 				},
 				{
-					"name": "Step TBD: TS Declaration BIGIP - Splunk",
+					"name": "NO USAR - TBD: TS Declaration BIGIP - Splunk",
 					"event": [
 						{
 							"listen": "test",
