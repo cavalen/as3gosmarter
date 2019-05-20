@@ -16,7 +16,8 @@
     - name: Create a pool
       bigip_pool:
         provider: "{{ provider }}"
-        lb_method: ratio-member
+        lb_method: round-robin
+        monitors: "/Common/http"
         name: pool_web_ansible
         slow_ramp_time: 120
       delegate_to: localhost
