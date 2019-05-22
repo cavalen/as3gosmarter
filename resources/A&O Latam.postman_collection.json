@@ -10,12 +10,12 @@
 			"name": "Lab 0 - Install Postman WorkFlows",
 			"item": [
 				{
-					"name": "Step 1: Check f5-postman-workflows Version",
+					"name": "Follow the instructions in the URL",
 					"event": [
 						{
 							"listen": "test",
 							"script": {
-								"type": "text/javascript",
+								"id": "f728b7a5-6320-4e63-b9c2-ae917c72e450",
 								"exec": [
 									"var installed_ver = \"\";",
 									"if(globals._f5_workflow_functions) {",
@@ -36,18 +36,20 @@
 									"    tests[\"Latest Version is NOT Installed\"] = 0;",
 									"}",
 									""
-								]
+								],
+								"type": "text/javascript"
 							}
 						},
 						{
 							"listen": "prerequest",
 							"script": {
-								"type": "text/javascript",
+								"id": "6bb9165a-16ae-421b-9cd1-c85984044417",
 								"exec": [
 									"if( postman.getGlobalVariable('_f5_framework_branch') === undefined) {",
 									"    postman.setGlobalVariable('_f5_framework_branch', 'master');",
 									"}"
-								]
+								],
+								"type": "text/javascript"
 							}
 						}
 					],
@@ -60,133 +62,17 @@
 							}
 						],
 						"url": {
-							"raw": "https://raw.githubusercontent.com/0xHiteshPatel/f5-postman-workflows/{{_f5_framework_branch}}/VERSION.md",
+							"raw": "https://github.com/0xHiteshPatel/f5-postman-workflows",
 							"protocol": "https",
 							"host": [
-								"raw",
-								"githubusercontent",
+								"github",
 								"com"
 							],
 							"path": [
 								"0xHiteshPatel",
-								"f5-postman-workflows",
-								"{{_f5_framework_branch}}",
-								"VERSION.md"
+								"f5-postman-workflows"
 							]
-						},
-						"description": "This request uses Google's Closure Compiler service to GET the latest version of the package from Github, minify it and install it in the '_f5_workflow_functions' global variable\n\nIt will also create global variables for configuration if they don't already exist."
-					},
-					"response": []
-				},
-				{
-					"name": "Step 2: Install/Upgrade f5-postman-workflows",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"id": "0e12652b-aedf-4c81-be75-73bff6e1e267",
-								"exec": [
-									"var fresh_install = false;",
-									"var global_defaults = [",
-									"        [\"_f5_debug\"              ,\"1\"],    ",
-									"        [\"_f5_enable_polled_mode\" ,\"0\"],",
-									"        [\"_f5_poll_max_tries\"     ,\"60\"],",
-									"        [\"_f5_poll_wait\"          ,\"5\"],",
-									"        [\"_f5_poll_useinternal\"   ,\"0\"],",
-									"        [\"_f5_poll_apiurl\"        ,\"https://postman-echo.com/delay\"],",
-									"        [\"_f5_poll_bypass_timeout\",\"0\"],",
-									"        [\"_f5_poll_iterator\"      ,\"1\"],",
-									"        [\"_f5_poll_curr\"          ,\"\"],",
-									"    ];",
-									"    ",
-									"var json = JSON.parse(responseBody);",
-									"",
-									"if (json.compiledCode.length > 0 && json.errors === undefined) {",
-									"    for(var i = 0; i < global_defaults.length; i++) {",
-									"        if(!(global_defaults[i][0] in globals) || fresh_install) {",
-									"            console.log(\"INSTALL: global: \" + global_defaults[i][0] + \"=\" + global_defaults[i][1]);",
-									"            postman.setGlobalVariable(global_defaults[i][0], global_defaults[i][1]);",
-									"        }",
-									"    }",
-									"    postman.setGlobalVariable('_f5_workflow_functions', json.compiledCode);",
-									"    console.log(\"INSTALL: set _f5_workflow_functions\");",
-									"    ",
-									"    tests['Install Successful'] = 1;",
-									"} else {",
-									"    tests['Install Failed'] = 0;",
-									"}",
-									"",
-									"if (postman.getGlobalVariable('_f5_framework_branch') == 'master') {",
-									"    postman.clearGlobalVariable('_f5_framework_branch');",
-									"}"
-								],
-								"type": "text/javascript"
-							}
-						},
-						{
-							"listen": "prerequest",
-							"script": {
-								"id": "4078b7cb-bbeb-4457-b952-153b7215360f",
-								"exec": [
-									"if( postman.getGlobalVariable('_f5_framework_branch') === undefined) {",
-									"    postman.setGlobalVariable('_f5_framework_branch', 'master');",
-									"}"
-								],
-								"type": "text/javascript"
-							}
 						}
-					],
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/x-www-form-urlencoded"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": ""
-						},
-						"url": {
-							"raw": "https://closure-compiler.appspot.com/compile?code_url=https://raw.githubusercontent.com/0xHiteshPatel/f5-postman-workflows/{{_f5_framework_branch}}/framework/src/f5-postman-workflows.js&compilation_level=SIMPLE_OPTIMIZATIONS&output_format=json&output_info=warnings&output_info=errors&output_info=compiled_code",
-							"protocol": "https",
-							"host": [
-								"closure-compiler",
-								"appspot",
-								"com"
-							],
-							"path": [
-								"compile"
-							],
-							"query": [
-								{
-									"key": "code_url",
-									"value": "https://raw.githubusercontent.com/0xHiteshPatel/f5-postman-workflows/{{_f5_framework_branch}}/framework/src/f5-postman-workflows.js"
-								},
-								{
-									"key": "compilation_level",
-									"value": "SIMPLE_OPTIMIZATIONS"
-								},
-								{
-									"key": "output_format",
-									"value": "json"
-								},
-								{
-									"key": "output_info",
-									"value": "warnings"
-								},
-								{
-									"key": "output_info",
-									"value": "errors"
-								},
-								{
-									"key": "output_info",
-									"value": "compiled_code"
-								}
-							]
-						},
-						"description": "This request uses Google's Closure Compiler service to GET the latest version of the package from Github, minify it and install it in the '_f5_workflow_functions' global variable\n\nIt will also create global variables for configuration if they don't already exist."
 					},
 					"response": []
 				}
@@ -219,7 +105,7 @@
 			"name": "Lab 1 - Auth & Initial Settings",
 			"item": [
 				{
-					"name": "Step 1: HTTP BASIC Authentication",
+					"name": "Step 1a: HTTP BASIC Authentication",
 					"event": [
 						{
 							"listen": "test",
@@ -286,7 +172,7 @@
 					"response": []
 				},
 				{
-					"name": "Retrieve Authentication Token BIGIP",
+					"name": "Step 1b: Retrieve Authentication Token BIGIP",
 					"event": [
 						{
 							"listen": "test",
@@ -335,7 +221,7 @@
 					"response": []
 				},
 				{
-					"name": "Set Authentication Token Timeout BIGIP",
+					"name": "Step 1c: Set Authentication Token Timeout BIGIP",
 					"event": [
 						{
 							"listen": "test",
@@ -542,7 +428,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"nameServers\": [\n    \"4.2.2.2\",\n    \"8.8.8.8\"\n  ],\n  \"search\": [\n    \"localhost\"\n  ]\n}"
+							"raw": "{\n  \"nameServers\": [\n    \"8.8.8.8\"\n  ],\n  \"search\": [\n    \"localhost\"\n  ]\n}"
 						},
 						"url": {
 							"raw": "https://{{bigip1}}/mgmt/tm/sys/dns",
@@ -1731,7 +1617,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"$schema\": \"https://raw.githubusercontent.com/F5Networks/f5-appsvcs-extension/master/schema/latest/as3-schema-3.11.0-3.json\",\r\n    \"class\": \"AS3\",\r\n    \"action\": \"deploy\",\r\n    \"persist\": true,\r\n    \"declaration\": {\r\n        \"class\": \"ADC\",\r\n        \"schemaVersion\": \"3.10.0\",\r\n        \"id\": \"lmnop45678\",\r\n        \"label\": \"GoSmarter\",\r\n        \"remark\": \"HTTPS application with WAF Policy\",\r\n        \"controls\": {\r\n            \"trace\": true\r\n        },\r\n        \"ACME_cloud_04\": {\r\n            \"class\": \"Tenant\",\r\n            \"Application_04\": {\r\n                \"class\": \"Application\",\r\n                \"template\": \"https\",\r\n                \"serviceMain\": {\r\n                    \"class\": \"Service_HTTPS\",\r\n                    \"virtualAddresses\": [\r\n                        \"10.1.10.115\"\r\n                    ],\r\n                    \"pool\": \"appsec_pool\",\r\n                    \"securityLogProfiles\": [\r\n                    \t{\r\n                    \t\t\"bigip\": \"/Common/Log all requests\"\r\n                    \t}\r\n                    ],\r\n                    \"policyWAF\": {\r\n                    \t\"use\": \"AcmeWAF\"\r\n                    },\r\n                    \"serverTLS\": \"frontside_appsec\"\r\n                },\r\n                \"appsec_pool\": {\r\n                    \"class\": \"Pool\",\r\n                    \"monitors\": [\r\n                        \"http\"\r\n                    ],\r\n                    \"members\": [\r\n                        {\r\n                            \"servicePort\": 80,\r\n                            \"serverAddresses\": [\r\n                                \"10.1.20.20\"\r\n                            ],\r\n                            \"shareNodes\": true\r\n                        }\r\n                    ]\r\n                },\r\n                \"AcmeWAF\": {\r\n                \t\"class\": \"WAF_Policy\",\r\n                \t\"url\": \"http://10.1.1.252/as3gosmarter/resources/waf_acme.xml\",\r\n                \t\"ignoreChanges\": true\r\n                },\r\n\t\t\t\t\"frontside_appsec\": {\r\n\t\t\t\t\t\"class\": \"TLS_Server\",\r\n\t\t\t\t\t\"certificates\": [\r\n\t\t\t\t\t\t{\r\n\t\t\t\t\t\t\t\"certificate\": \"webcert_appsec\"\r\n\t\t\t\t\t\t}\r\n\t\t\t\t\t\t]\r\n\t\t\t\t},\r\n                \"webcert_appsec\": {\r\n                    \"class\": \"Certificate\",\r\n                    \"remark\": \"in practice we recommend using a passphrase\",\r\n                    \"certificate\": \"-----BEGIN CERTIFICATE-----\\nMIIDIjCCAgqgAwIBAgIEEZ+6iTANBgkqhkiG9w0BAQsFADBTMQswCQYDVQQGEwJV\\nUzEUMBIGA1UEChMLRjUgTmV0d29ya3MxEjAQBgNVBAsTCUdvU21hcnRlcjEaMBgG\\nA1UEAxMRd2ViYXBwLmY1ZGVtby5jb20wHhcNMTkwNTE2MTMzMDQ5WhcNMjEwNTE1\\nMTMzMDQ5WjBTMQswCQYDVQQGEwJVUzEUMBIGA1UEChMLRjUgTmV0d29ya3MxEjAQ\\nBgNVBAsTCUdvU21hcnRlcjEaMBgGA1UEAxMRd2ViYXBwLmY1ZGVtby5jb20wggEi\\nMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQCzZcc48eMRCrI5QIOprcAInNGH\\nlBMSJACKTSGAaFBLXdzrqdkZC28zpDl7KfbplyNF1rGnkvZPbtPAD1mM39te81fe\\nFpz4cfIE5V+RUiufWnmS5Q/T5I2ct7VMLFJ51DTj6MR3ahA3ePwE1OW4OzNmMEDz\\noZr6u4WFlhh732Nm9vBJfxStULnqVx3Lga0J1GCW5aYMRBxXrU2+U4Tiv+6okTkR\\nMgFjeVmT70GHpvVxllDjibreBlRbrh45LTLvpTLPzteXV2zT3AWohQSN8BjamF2T\\nMwwSzdHEZRPry3b8yVVUgnCnDiatxtEy1uJlvBzN204FiZpWYxwDrkcRYVB7AgMB\\nAAEwDQYJKoZIhvcNAQELBQADggEBABG/4P+e/Tktlqj6sZP301SWv8zHrgx5iqHO\\nqQcud5ZdvepwpS2naXNK9TkarzYrmvt5MZEOg/pUhUkJaKYz1PlM4Hyt+Dpq0pAm\\nLQs8bKZ6n+rr3g3QnnVUXAwjnS37cg8+WdxJuqrhtTDGqutqePhodW6rX4I4ovW/\\n9CP1ffq0e1NVKPzhsXJkXSFv0uJX7nC7PdFFcwHYUnKmYZdWkIcY9SRvToayX8Sd\\nWKjAczPbt56cdZIVRMOpC+GKQaVc01uiCBhD5WlVCKZxR75BD6ulKQ540WnzDxKE\\nOsK93ESA8qcWZblWSuxbPObMaQfYbVzVmSfxGvsKZGktdq6geNo=\\n-----END CERTIFICATE-----\",\r\n                    \"privateKey\": \"-----BEGIN PRIVATE KEY-----\\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQCzZcc48eMRCrI5\\nQIOprcAInNGHlBMSJACKTSGAaFBLXdzrqdkZC28zpDl7KfbplyNF1rGnkvZPbtPA\\nD1mM39te81feFpz4cfIE5V+RUiufWnmS5Q/T5I2ct7VMLFJ51DTj6MR3ahA3ePwE\\n1OW4OzNmMEDzoZr6u4WFlhh732Nm9vBJfxStULnqVx3Lga0J1GCW5aYMRBxXrU2+\\nU4Tiv+6okTkRMgFjeVmT70GHpvVxllDjibreBlRbrh45LTLvpTLPzteXV2zT3AWo\\nhQSN8BjamF2TMwwSzdHEZRPry3b8yVVUgnCnDiatxtEy1uJlvBzN204FiZpWYxwD\\nrkcRYVB7AgMBAAECggEAEYBQ3q/OWJfECkzOa2u9a7mswT7DW4YynUtoBMhoaOnX\\nxw/TU5undhDD4M2XvnMVqFcJDtGKAPbNZpO4x0MBejJgNJTdLGmlVC/yUlGDWvDv\\nIlMBZ8kIvay4XZ2HUEZRAJjxLbslqNu/LlN8s6vm2EXF2F7AKUzI+l7Jta/12RH8\\n0SYLzZ8ccfFiOeVxT3HvV0QcaawGh34pfcOi3U+kaMZVZefnGFis1tKYWZb2ZV5c\\nPpW3U3PDPjeCxIO9jgRZbOhBkhCQWa1oKsibx1U1dYPSfqq/UtRKf8gKv6u+BkLC\\nVdFqWoC+S4/Wk7OPkdWfd28YZwF+kDhyQREchR2AmQKBgQD558pXfuh/Zpwx0H+D\\nifHTGmZFxcvjkbWQ0jEtBtNeQLOGgR8t3pQ7XQADcUAUBQ2lGR5sbP6lEgsMP35B\\nY3w7nybFkWNEtEEUqCLKoGm1O0HiSh4v2W4WBxt9ynJ4vASzNRh04dG8aVHyG8uI\\n30W2J0m0dRb1ZasKt+6Lguy3iQKBgQC3xcsLJ10I14rJQQhmcilF59QYT5TSoPuF\\nv9L1GdOhRCPXgr97R4/YEDzk/VgLyzMjwTYdr24Kdggsa9Gn8UQ8T1xGOTNN5GUS\\nqwammb2IkixWoPDnc9QokSk2XU8TRjPIR0OynpKmmLJeTDFbgu5kC7WAvCgGl0SN\\nHwJG2U+C4wKBgQCAvbptrMFVsKTSvNiUCSJ9YGJDm4xX5h6lRsNysMt/CNHzft1z\\nIfE3S8fP/i3GonvPC8uyi8v7efobCzKduQStKmYs7aM4J6xHWf7iaBVM+gQM8aXv\\nfJHL40l0WjDypdm+AKJixFrqN0+x7EPEdVFSb5b20kNLlF6zHOJVGNOeEQKBgAMI\\ntvN2MOkGdfogorzeQaQv0aadGb3ofn6UzizRwla1Q0o5lGO6qLtOeVLmg9+d+Tgr\\n5nLTBKQTksr49LsrFo9QWBuosholHS4TuMZjX2ez0huUCKYpmWUaEG4fWEDfNdem\\npY17ZLxvZPJ9m4sBPGJWdyaq9JY3RSB3VJhK2i81AoGBANwVq/2H0fo+JjlheEtb\\nWwg6HrPUtBWzOXV5qHyhbbFrA2jPQnN82Lty7UsjTTw2SDYic63OVZs6KL6AKnLW\\nFl1X6LEURQKI3KikgMtve39Xqpr/pz8ueMVGxRQ5FscpFyTfu7X9jy5aeVHwORr1\\nWzqlRmkCz4qghC1wiZYz/sk5\\n-----END PRIVATE KEY-----\"\r\n                }\r\n            }\r\n        }\r\n    }\r\n}"
+							"raw": "{\r\n    \"$schema\": \"https://raw.githubusercontent.com/F5Networks/f5-appsvcs-extension/master/schema/latest/as3-schema-3.11.0-3.json\",\r\n    \"class\": \"AS3\",\r\n    \"action\": \"deploy\",\r\n    \"persist\": true,\r\n    \"declaration\": {\r\n        \"class\": \"ADC\",\r\n        \"schemaVersion\": \"3.10.0\",\r\n        \"id\": \"lmnop45678\",\r\n        \"label\": \"GoSmarter\",\r\n        \"remark\": \"HTTPS application with WAF Policy\",\r\n        \"controls\": {\r\n            \"trace\": true\r\n        },\r\n        \"ACME_cloud_04\": {\r\n            \"class\": \"Tenant\",\r\n            \"Application_04\": {\r\n                \"class\": \"Application\",\r\n                \"template\": \"https\",\r\n                \"serviceMain\": {\r\n                    \"class\": \"Service_HTTPS\",\r\n                    \"virtualAddresses\": [\r\n                        \"10.1.10.115\"\r\n                    ],\r\n                    \"pool\": \"appsec_pool\",\r\n                    \"securityLogProfiles\": [\r\n                    \t{\r\n                    \t\t\"bigip\": \"/Common/Log all requests\"\r\n                    \t}\r\n                    ],\r\n                    \"policyWAF\": {\r\n                    \t\"use\": \"AcmeWAF\"\r\n                    },\r\n                    \"serverTLS\": \"frontside_appsec\"\r\n                },\r\n                \"appsec_pool\": {\r\n                    \"class\": \"Pool\",\r\n                    \"monitors\": [\r\n                        \"http\"\r\n                    ],\r\n                    \"members\": [\r\n                        {\r\n                            \"servicePort\": 80,\r\n                            \"serverAddresses\": [\r\n                                \"10.1.20.20\"\r\n                            ],\r\n                            \"shareNodes\": true\r\n                        }\r\n                    ]\r\n                },\r\n                \"AcmeWAF\": {\r\n                \t\"class\": \"WAF_Policy\",\r\n                \t\"url\": \"https://raw.githubusercontent.com/cavalen/as3gosmarter/master/resources/waf_acme.xml\",\r\n                \t\"ignoreChanges\": true\r\n                },\r\n\t\t\t\t\"frontside_appsec\": {\r\n\t\t\t\t\t\"class\": \"TLS_Server\",\r\n\t\t\t\t\t\"certificates\": [\r\n\t\t\t\t\t\t{\r\n\t\t\t\t\t\t\t\"certificate\": \"webcert_appsec\"\r\n\t\t\t\t\t\t}\r\n\t\t\t\t\t\t]\r\n\t\t\t\t},\r\n                \"webcert_appsec\": {\r\n                    \"class\": \"Certificate\",\r\n                    \"remark\": \"in practice we recommend using a passphrase\",\r\n                    \"certificate\": \"-----BEGIN CERTIFICATE-----\\nMIIDIjCCAgqgAwIBAgIEEZ+6iTANBgkqhkiG9w0BAQsFADBTMQswCQYDVQQGEwJV\\nUzEUMBIGA1UEChMLRjUgTmV0d29ya3MxEjAQBgNVBAsTCUdvU21hcnRlcjEaMBgG\\nA1UEAxMRd2ViYXBwLmY1ZGVtby5jb20wHhcNMTkwNTE2MTMzMDQ5WhcNMjEwNTE1\\nMTMzMDQ5WjBTMQswCQYDVQQGEwJVUzEUMBIGA1UEChMLRjUgTmV0d29ya3MxEjAQ\\nBgNVBAsTCUdvU21hcnRlcjEaMBgGA1UEAxMRd2ViYXBwLmY1ZGVtby5jb20wggEi\\nMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQCzZcc48eMRCrI5QIOprcAInNGH\\nlBMSJACKTSGAaFBLXdzrqdkZC28zpDl7KfbplyNF1rGnkvZPbtPAD1mM39te81fe\\nFpz4cfIE5V+RUiufWnmS5Q/T5I2ct7VMLFJ51DTj6MR3ahA3ePwE1OW4OzNmMEDz\\noZr6u4WFlhh732Nm9vBJfxStULnqVx3Lga0J1GCW5aYMRBxXrU2+U4Tiv+6okTkR\\nMgFjeVmT70GHpvVxllDjibreBlRbrh45LTLvpTLPzteXV2zT3AWohQSN8BjamF2T\\nMwwSzdHEZRPry3b8yVVUgnCnDiatxtEy1uJlvBzN204FiZpWYxwDrkcRYVB7AgMB\\nAAEwDQYJKoZIhvcNAQELBQADggEBABG/4P+e/Tktlqj6sZP301SWv8zHrgx5iqHO\\nqQcud5ZdvepwpS2naXNK9TkarzYrmvt5MZEOg/pUhUkJaKYz1PlM4Hyt+Dpq0pAm\\nLQs8bKZ6n+rr3g3QnnVUXAwjnS37cg8+WdxJuqrhtTDGqutqePhodW6rX4I4ovW/\\n9CP1ffq0e1NVKPzhsXJkXSFv0uJX7nC7PdFFcwHYUnKmYZdWkIcY9SRvToayX8Sd\\nWKjAczPbt56cdZIVRMOpC+GKQaVc01uiCBhD5WlVCKZxR75BD6ulKQ540WnzDxKE\\nOsK93ESA8qcWZblWSuxbPObMaQfYbVzVmSfxGvsKZGktdq6geNo=\\n-----END CERTIFICATE-----\",\r\n                    \"privateKey\": \"-----BEGIN PRIVATE KEY-----\\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQCzZcc48eMRCrI5\\nQIOprcAInNGHlBMSJACKTSGAaFBLXdzrqdkZC28zpDl7KfbplyNF1rGnkvZPbtPA\\nD1mM39te81feFpz4cfIE5V+RUiufWnmS5Q/T5I2ct7VMLFJ51DTj6MR3ahA3ePwE\\n1OW4OzNmMEDzoZr6u4WFlhh732Nm9vBJfxStULnqVx3Lga0J1GCW5aYMRBxXrU2+\\nU4Tiv+6okTkRMgFjeVmT70GHpvVxllDjibreBlRbrh45LTLvpTLPzteXV2zT3AWo\\nhQSN8BjamF2TMwwSzdHEZRPry3b8yVVUgnCnDiatxtEy1uJlvBzN204FiZpWYxwD\\nrkcRYVB7AgMBAAECggEAEYBQ3q/OWJfECkzOa2u9a7mswT7DW4YynUtoBMhoaOnX\\nxw/TU5undhDD4M2XvnMVqFcJDtGKAPbNZpO4x0MBejJgNJTdLGmlVC/yUlGDWvDv\\nIlMBZ8kIvay4XZ2HUEZRAJjxLbslqNu/LlN8s6vm2EXF2F7AKUzI+l7Jta/12RH8\\n0SYLzZ8ccfFiOeVxT3HvV0QcaawGh34pfcOi3U+kaMZVZefnGFis1tKYWZb2ZV5c\\nPpW3U3PDPjeCxIO9jgRZbOhBkhCQWa1oKsibx1U1dYPSfqq/UtRKf8gKv6u+BkLC\\nVdFqWoC+S4/Wk7OPkdWfd28YZwF+kDhyQREchR2AmQKBgQD558pXfuh/Zpwx0H+D\\nifHTGmZFxcvjkbWQ0jEtBtNeQLOGgR8t3pQ7XQADcUAUBQ2lGR5sbP6lEgsMP35B\\nY3w7nybFkWNEtEEUqCLKoGm1O0HiSh4v2W4WBxt9ynJ4vASzNRh04dG8aVHyG8uI\\n30W2J0m0dRb1ZasKt+6Lguy3iQKBgQC3xcsLJ10I14rJQQhmcilF59QYT5TSoPuF\\nv9L1GdOhRCPXgr97R4/YEDzk/VgLyzMjwTYdr24Kdggsa9Gn8UQ8T1xGOTNN5GUS\\nqwammb2IkixWoPDnc9QokSk2XU8TRjPIR0OynpKmmLJeTDFbgu5kC7WAvCgGl0SN\\nHwJG2U+C4wKBgQCAvbptrMFVsKTSvNiUCSJ9YGJDm4xX5h6lRsNysMt/CNHzft1z\\nIfE3S8fP/i3GonvPC8uyi8v7efobCzKduQStKmYs7aM4J6xHWf7iaBVM+gQM8aXv\\nfJHL40l0WjDypdm+AKJixFrqN0+x7EPEdVFSb5b20kNLlF6zHOJVGNOeEQKBgAMI\\ntvN2MOkGdfogorzeQaQv0aadGb3ofn6UzizRwla1Q0o5lGO6qLtOeVLmg9+d+Tgr\\n5nLTBKQTksr49LsrFo9QWBuosholHS4TuMZjX2ez0huUCKYpmWUaEG4fWEDfNdem\\npY17ZLxvZPJ9m4sBPGJWdyaq9JY3RSB3VJhK2i81AoGBANwVq/2H0fo+JjlheEtb\\nWwg6HrPUtBWzOXV5qHyhbbFrA2jPQnN82Lty7UsjTTw2SDYic63OVZs6KL6AKnLW\\nFl1X6LEURQKI3KikgMtve39Xqpr/pz8ueMVGxRQ5FscpFyTfu7X9jy5aeVHwORr1\\nWzqlRmkCz4qghC1wiZYz/sk5\\n-----END PRIVATE KEY-----\"\r\n                }\r\n            }\r\n        }\r\n    }\r\n}"
 						},
 						"url": {
 							"raw": "https://{{bigip1}}/mgmt/shared/appsvcs/declare",
@@ -1745,7 +1631,8 @@
 								"appsvcs",
 								"declare"
 							]
-						}
+						},
+						"description": "If there is an error pulling the WAF policy from GitHub, use this instead:\n\nhttp://10.1.1.252/as3gosmarter/resources/waf_acme.xml"
 					},
 					"response": []
 				},
@@ -1777,7 +1664,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"$schema\": \"https://raw.githubusercontent.com/F5Networks/f5-appsvcs-extension/master/schema/latest/as3-schema-3.11.0-3.json\",\r\n    \"class\": \"AS3\",\r\n    \"action\": \"deploy\",\r\n    \"persist\": true,\r\n    \"declaration\": {\r\n        \"class\": \"ADC\",\r\n        \"schemaVersion\": \"3.10.0\",\r\n        \"id\": \"lmnop56789\",\r\n        \"label\": \"GoSmarter\",\r\n        \"remark\": \"HTTPS application with iRules & WAF Policy\",\r\n        \"controls\": {\r\n            \"trace\": true\r\n        },\r\n        \"ACME_cloud_04\": {\r\n            \"class\": \"Tenant\",\r\n            \"Application_04\": {\r\n                \"class\": \"Application\",\r\n                \"template\": \"https\",\r\n                \"serviceMain\": {\r\n                    \"class\": \"Service_HTTPS\",\r\n                    \"virtualAddresses\": [\r\n                        \"10.1.10.115\"\r\n                    ],\r\n\t\t\t\t\t\"profileStream\": {\r\n\t\t\t\t\t\t\"use\": \"streamProfile\"\r\n\t\t\t\t\t},\r\n                    \"pool\": \"appsec_pool\",\r\n                    \"iRules\": [\r\n                    \t\"iRule_InsertHeader\",\r\n                    \t\"iRule_CVE_2017_5638\"\r\n                    ],\r\n                    \"securityLogProfiles\": [\r\n                    \t{\r\n                    \t\t\"bigip\": \"/Common/Log all requests\"\r\n                    \t}\r\n                    ],\r\n                    \"policyWAF\": {\r\n                    \t\"use\": \"AcmeWAF\"\r\n                    },\r\n                    \"serverTLS\": \"frontside_appsec\"\r\n                },\r\n                \"appsec_pool\": {\r\n                    \"class\": \"Pool\",\r\n                    \"monitors\": [\r\n                        \"http\"\r\n                    ],\r\n                    \"members\": [\r\n                        {\r\n                            \"servicePort\": 80,\r\n                            \"serverAddresses\": [\r\n                                \"10.1.20.20\"\r\n                            ],\r\n                            \"shareNodes\": true\r\n                        }\r\n                    ]\r\n                },\r\n\t\t\t\t\"iRule_InsertHeader\": {\r\n\t\t\t\t\t\"class\": \"iRule\",\r\n\t\t\t\t\t\"remark\": \"Insert headers to response\",\r\n\t\t\t\t\t\"iRule\": \"when HTTP_RESPONSE {\\nHTTP::header insert X-CustomHeader [IP::client_addr]\\n HTTP::header replace Server GOSMARTER\\n}\"\r\n\t\t\t\t},\r\n\t\t\t\t\"iRule_CVE_2017_5638\": {\r\n\t\t\t\t\t\"class\": \"iRule\",\r\n\t\t\t\t\t\"iRule\": {\r\n\t\t\t\t\t\t\"url\": \"http://10.1.1.252/as3gosmarter/resources/CVE-2017-5638-ApacheStruts2.irule\"\r\n\t\t\t\t\t}\r\n\t\t\t\t},                \r\n                \"AcmeWAF\": {\r\n                \t\"class\": \"WAF_Policy\",\r\n                \t\"url\": \"http://10.1.1.252/as3gosmarter/resources/waf_acme.xml\",\r\n                \t\"ignoreChanges\": true\r\n                },\r\n                \"streamProfile\": {\r\n                \t\"class\": \"Stream_Profile\"\r\n                },\r\n\t\t\t\t\"frontside_appsec\": {\r\n\t\t\t\t\t\"class\": \"TLS_Server\",\r\n\t\t\t\t\t\"certificates\": [\r\n\t\t\t\t\t\t{\r\n\t\t\t\t\t\t\t\"certificate\": \"webcert_appsec\"\r\n\t\t\t\t\t\t}\r\n\t\t\t\t\t\t]\r\n\t\t\t\t},\r\n                \"webcert_appsec\": {\r\n                    \"class\": \"Certificate\",\r\n                    \"remark\": \"in practice we recommend using a passphrase\",\r\n                    \"certificate\": \"-----BEGIN CERTIFICATE-----\\nMIIDIjCCAgqgAwIBAgIEEZ+6iTANBgkqhkiG9w0BAQsFADBTMQswCQYDVQQGEwJV\\nUzEUMBIGA1UEChMLRjUgTmV0d29ya3MxEjAQBgNVBAsTCUdvU21hcnRlcjEaMBgG\\nA1UEAxMRd2ViYXBwLmY1ZGVtby5jb20wHhcNMTkwNTE2MTMzMDQ5WhcNMjEwNTE1\\nMTMzMDQ5WjBTMQswCQYDVQQGEwJVUzEUMBIGA1UEChMLRjUgTmV0d29ya3MxEjAQ\\nBgNVBAsTCUdvU21hcnRlcjEaMBgGA1UEAxMRd2ViYXBwLmY1ZGVtby5jb20wggEi\\nMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQCzZcc48eMRCrI5QIOprcAInNGH\\nlBMSJACKTSGAaFBLXdzrqdkZC28zpDl7KfbplyNF1rGnkvZPbtPAD1mM39te81fe\\nFpz4cfIE5V+RUiufWnmS5Q/T5I2ct7VMLFJ51DTj6MR3ahA3ePwE1OW4OzNmMEDz\\noZr6u4WFlhh732Nm9vBJfxStULnqVx3Lga0J1GCW5aYMRBxXrU2+U4Tiv+6okTkR\\nMgFjeVmT70GHpvVxllDjibreBlRbrh45LTLvpTLPzteXV2zT3AWohQSN8BjamF2T\\nMwwSzdHEZRPry3b8yVVUgnCnDiatxtEy1uJlvBzN204FiZpWYxwDrkcRYVB7AgMB\\nAAEwDQYJKoZIhvcNAQELBQADggEBABG/4P+e/Tktlqj6sZP301SWv8zHrgx5iqHO\\nqQcud5ZdvepwpS2naXNK9TkarzYrmvt5MZEOg/pUhUkJaKYz1PlM4Hyt+Dpq0pAm\\nLQs8bKZ6n+rr3g3QnnVUXAwjnS37cg8+WdxJuqrhtTDGqutqePhodW6rX4I4ovW/\\n9CP1ffq0e1NVKPzhsXJkXSFv0uJX7nC7PdFFcwHYUnKmYZdWkIcY9SRvToayX8Sd\\nWKjAczPbt56cdZIVRMOpC+GKQaVc01uiCBhD5WlVCKZxR75BD6ulKQ540WnzDxKE\\nOsK93ESA8qcWZblWSuxbPObMaQfYbVzVmSfxGvsKZGktdq6geNo=\\n-----END CERTIFICATE-----\",\r\n                    \"privateKey\": \"-----BEGIN PRIVATE KEY-----\\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQCzZcc48eMRCrI5\\nQIOprcAInNGHlBMSJACKTSGAaFBLXdzrqdkZC28zpDl7KfbplyNF1rGnkvZPbtPA\\nD1mM39te81feFpz4cfIE5V+RUiufWnmS5Q/T5I2ct7VMLFJ51DTj6MR3ahA3ePwE\\n1OW4OzNmMEDzoZr6u4WFlhh732Nm9vBJfxStULnqVx3Lga0J1GCW5aYMRBxXrU2+\\nU4Tiv+6okTkRMgFjeVmT70GHpvVxllDjibreBlRbrh45LTLvpTLPzteXV2zT3AWo\\nhQSN8BjamF2TMwwSzdHEZRPry3b8yVVUgnCnDiatxtEy1uJlvBzN204FiZpWYxwD\\nrkcRYVB7AgMBAAECggEAEYBQ3q/OWJfECkzOa2u9a7mswT7DW4YynUtoBMhoaOnX\\nxw/TU5undhDD4M2XvnMVqFcJDtGKAPbNZpO4x0MBejJgNJTdLGmlVC/yUlGDWvDv\\nIlMBZ8kIvay4XZ2HUEZRAJjxLbslqNu/LlN8s6vm2EXF2F7AKUzI+l7Jta/12RH8\\n0SYLzZ8ccfFiOeVxT3HvV0QcaawGh34pfcOi3U+kaMZVZefnGFis1tKYWZb2ZV5c\\nPpW3U3PDPjeCxIO9jgRZbOhBkhCQWa1oKsibx1U1dYPSfqq/UtRKf8gKv6u+BkLC\\nVdFqWoC+S4/Wk7OPkdWfd28YZwF+kDhyQREchR2AmQKBgQD558pXfuh/Zpwx0H+D\\nifHTGmZFxcvjkbWQ0jEtBtNeQLOGgR8t3pQ7XQADcUAUBQ2lGR5sbP6lEgsMP35B\\nY3w7nybFkWNEtEEUqCLKoGm1O0HiSh4v2W4WBxt9ynJ4vASzNRh04dG8aVHyG8uI\\n30W2J0m0dRb1ZasKt+6Lguy3iQKBgQC3xcsLJ10I14rJQQhmcilF59QYT5TSoPuF\\nv9L1GdOhRCPXgr97R4/YEDzk/VgLyzMjwTYdr24Kdggsa9Gn8UQ8T1xGOTNN5GUS\\nqwammb2IkixWoPDnc9QokSk2XU8TRjPIR0OynpKmmLJeTDFbgu5kC7WAvCgGl0SN\\nHwJG2U+C4wKBgQCAvbptrMFVsKTSvNiUCSJ9YGJDm4xX5h6lRsNysMt/CNHzft1z\\nIfE3S8fP/i3GonvPC8uyi8v7efobCzKduQStKmYs7aM4J6xHWf7iaBVM+gQM8aXv\\nfJHL40l0WjDypdm+AKJixFrqN0+x7EPEdVFSb5b20kNLlF6zHOJVGNOeEQKBgAMI\\ntvN2MOkGdfogorzeQaQv0aadGb3ofn6UzizRwla1Q0o5lGO6qLtOeVLmg9+d+Tgr\\n5nLTBKQTksr49LsrFo9QWBuosholHS4TuMZjX2ez0huUCKYpmWUaEG4fWEDfNdem\\npY17ZLxvZPJ9m4sBPGJWdyaq9JY3RSB3VJhK2i81AoGBANwVq/2H0fo+JjlheEtb\\nWwg6HrPUtBWzOXV5qHyhbbFrA2jPQnN82Lty7UsjTTw2SDYic63OVZs6KL6AKnLW\\nFl1X6LEURQKI3KikgMtve39Xqpr/pz8ueMVGxRQ5FscpFyTfu7X9jy5aeVHwORr1\\nWzqlRmkCz4qghC1wiZYz/sk5\\n-----END PRIVATE KEY-----\"\r\n                }\r\n            }\r\n        }\r\n    }\r\n}"
+							"raw": "{\r\n    \"$schema\": \"https://raw.githubusercontent.com/F5Networks/f5-appsvcs-extension/master/schema/latest/as3-schema-3.11.0-3.json\",\r\n    \"class\": \"AS3\",\r\n    \"action\": \"deploy\",\r\n    \"persist\": true,\r\n    \"declaration\": {\r\n        \"class\": \"ADC\",\r\n        \"schemaVersion\": \"3.10.0\",\r\n        \"id\": \"lmnop56789\",\r\n        \"label\": \"GoSmarter\",\r\n        \"remark\": \"HTTPS application with iRules & WAF Policy\",\r\n        \"controls\": {\r\n            \"trace\": true\r\n        },\r\n        \"ACME_cloud_04\": {\r\n            \"class\": \"Tenant\",\r\n            \"Application_04\": {\r\n                \"class\": \"Application\",\r\n                \"template\": \"https\",\r\n                \"serviceMain\": {\r\n                    \"class\": \"Service_HTTPS\",\r\n                    \"virtualAddresses\": [\r\n                        \"10.1.10.115\"\r\n                    ],\r\n\t\t\t\t\t\"profileStream\": {\r\n\t\t\t\t\t\t\"use\": \"streamProfile\"\r\n\t\t\t\t\t},\r\n                    \"pool\": \"appsec_pool\",\r\n                    \"iRules\": [\r\n                    \t\"iRule_InsertHeader\",\r\n                    \t\"iRule_CVE_2017_5638\"\r\n                    ],\r\n                    \"securityLogProfiles\": [\r\n                    \t{\r\n                    \t\t\"bigip\": \"/Common/Log all requests\"\r\n                    \t}\r\n                    ],\r\n                    \"policyWAF\": {\r\n                    \t\"use\": \"AcmeWAF\"\r\n                    },\r\n                    \"serverTLS\": \"frontside_appsec\"\r\n                },\r\n                \"appsec_pool\": {\r\n                    \"class\": \"Pool\",\r\n                    \"monitors\": [\r\n                        \"http\"\r\n                    ],\r\n                    \"members\": [\r\n                        {\r\n                            \"servicePort\": 80,\r\n                            \"serverAddresses\": [\r\n                                \"10.1.20.20\"\r\n                            ],\r\n                            \"shareNodes\": true\r\n                        }\r\n                    ]\r\n                },\r\n\t\t\t\t\"iRule_InsertHeader\": {\r\n\t\t\t\t\t\"class\": \"iRule\",\r\n\t\t\t\t\t\"remark\": \"Insert headers to response\",\r\n\t\t\t\t\t\"iRule\": \"when HTTP_RESPONSE {\\nHTTP::header insert X-CustomHeader [IP::client_addr]\\n HTTP::header replace Server GOSMARTER\\n}\"\r\n\t\t\t\t},\r\n\t\t\t\t\"iRule_CVE_2017_5638\": {\r\n\t\t\t\t\t\"class\": \"iRule\",\r\n\t\t\t\t\t\"iRule\": {\r\n\t\t\t\t\t\t\"url\": \"https://raw.githubusercontent.com/cavalen/as3gosmarter/master/resources/CVE-2017-5638-ApacheStruts2.irule\"\r\n\t\t\t\t\t}\r\n\t\t\t\t},                \r\n                \"AcmeWAF\": {\r\n                \t\"class\": \"WAF_Policy\",\r\n                \t\"url\": \"https://raw.githubusercontent.com/cavalen/as3gosmarter/master/resources/waf_acme.xml\",\r\n                \t\"ignoreChanges\": true\r\n                },\r\n                \"streamProfile\": {\r\n                \t\"class\": \"Stream_Profile\"\r\n                },\r\n\t\t\t\t\"frontside_appsec\": {\r\n\t\t\t\t\t\"class\": \"TLS_Server\",\r\n\t\t\t\t\t\"certificates\": [\r\n\t\t\t\t\t\t{\r\n\t\t\t\t\t\t\t\"certificate\": \"webcert_appsec\"\r\n\t\t\t\t\t\t}\r\n\t\t\t\t\t\t]\r\n\t\t\t\t},\r\n                \"webcert_appsec\": {\r\n                    \"class\": \"Certificate\",\r\n                    \"remark\": \"in practice we recommend using a passphrase\",\r\n                    \"certificate\": \"-----BEGIN CERTIFICATE-----\\nMIIDIjCCAgqgAwIBAgIEEZ+6iTANBgkqhkiG9w0BAQsFADBTMQswCQYDVQQGEwJV\\nUzEUMBIGA1UEChMLRjUgTmV0d29ya3MxEjAQBgNVBAsTCUdvU21hcnRlcjEaMBgG\\nA1UEAxMRd2ViYXBwLmY1ZGVtby5jb20wHhcNMTkwNTE2MTMzMDQ5WhcNMjEwNTE1\\nMTMzMDQ5WjBTMQswCQYDVQQGEwJVUzEUMBIGA1UEChMLRjUgTmV0d29ya3MxEjAQ\\nBgNVBAsTCUdvU21hcnRlcjEaMBgGA1UEAxMRd2ViYXBwLmY1ZGVtby5jb20wggEi\\nMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQCzZcc48eMRCrI5QIOprcAInNGH\\nlBMSJACKTSGAaFBLXdzrqdkZC28zpDl7KfbplyNF1rGnkvZPbtPAD1mM39te81fe\\nFpz4cfIE5V+RUiufWnmS5Q/T5I2ct7VMLFJ51DTj6MR3ahA3ePwE1OW4OzNmMEDz\\noZr6u4WFlhh732Nm9vBJfxStULnqVx3Lga0J1GCW5aYMRBxXrU2+U4Tiv+6okTkR\\nMgFjeVmT70GHpvVxllDjibreBlRbrh45LTLvpTLPzteXV2zT3AWohQSN8BjamF2T\\nMwwSzdHEZRPry3b8yVVUgnCnDiatxtEy1uJlvBzN204FiZpWYxwDrkcRYVB7AgMB\\nAAEwDQYJKoZIhvcNAQELBQADggEBABG/4P+e/Tktlqj6sZP301SWv8zHrgx5iqHO\\nqQcud5ZdvepwpS2naXNK9TkarzYrmvt5MZEOg/pUhUkJaKYz1PlM4Hyt+Dpq0pAm\\nLQs8bKZ6n+rr3g3QnnVUXAwjnS37cg8+WdxJuqrhtTDGqutqePhodW6rX4I4ovW/\\n9CP1ffq0e1NVKPzhsXJkXSFv0uJX7nC7PdFFcwHYUnKmYZdWkIcY9SRvToayX8Sd\\nWKjAczPbt56cdZIVRMOpC+GKQaVc01uiCBhD5WlVCKZxR75BD6ulKQ540WnzDxKE\\nOsK93ESA8qcWZblWSuxbPObMaQfYbVzVmSfxGvsKZGktdq6geNo=\\n-----END CERTIFICATE-----\",\r\n                    \"privateKey\": \"-----BEGIN PRIVATE KEY-----\\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQCzZcc48eMRCrI5\\nQIOprcAInNGHlBMSJACKTSGAaFBLXdzrqdkZC28zpDl7KfbplyNF1rGnkvZPbtPA\\nD1mM39te81feFpz4cfIE5V+RUiufWnmS5Q/T5I2ct7VMLFJ51DTj6MR3ahA3ePwE\\n1OW4OzNmMEDzoZr6u4WFlhh732Nm9vBJfxStULnqVx3Lga0J1GCW5aYMRBxXrU2+\\nU4Tiv+6okTkRMgFjeVmT70GHpvVxllDjibreBlRbrh45LTLvpTLPzteXV2zT3AWo\\nhQSN8BjamF2TMwwSzdHEZRPry3b8yVVUgnCnDiatxtEy1uJlvBzN204FiZpWYxwD\\nrkcRYVB7AgMBAAECggEAEYBQ3q/OWJfECkzOa2u9a7mswT7DW4YynUtoBMhoaOnX\\nxw/TU5undhDD4M2XvnMVqFcJDtGKAPbNZpO4x0MBejJgNJTdLGmlVC/yUlGDWvDv\\nIlMBZ8kIvay4XZ2HUEZRAJjxLbslqNu/LlN8s6vm2EXF2F7AKUzI+l7Jta/12RH8\\n0SYLzZ8ccfFiOeVxT3HvV0QcaawGh34pfcOi3U+kaMZVZefnGFis1tKYWZb2ZV5c\\nPpW3U3PDPjeCxIO9jgRZbOhBkhCQWa1oKsibx1U1dYPSfqq/UtRKf8gKv6u+BkLC\\nVdFqWoC+S4/Wk7OPkdWfd28YZwF+kDhyQREchR2AmQKBgQD558pXfuh/Zpwx0H+D\\nifHTGmZFxcvjkbWQ0jEtBtNeQLOGgR8t3pQ7XQADcUAUBQ2lGR5sbP6lEgsMP35B\\nY3w7nybFkWNEtEEUqCLKoGm1O0HiSh4v2W4WBxt9ynJ4vASzNRh04dG8aVHyG8uI\\n30W2J0m0dRb1ZasKt+6Lguy3iQKBgQC3xcsLJ10I14rJQQhmcilF59QYT5TSoPuF\\nv9L1GdOhRCPXgr97R4/YEDzk/VgLyzMjwTYdr24Kdggsa9Gn8UQ8T1xGOTNN5GUS\\nqwammb2IkixWoPDnc9QokSk2XU8TRjPIR0OynpKmmLJeTDFbgu5kC7WAvCgGl0SN\\nHwJG2U+C4wKBgQCAvbptrMFVsKTSvNiUCSJ9YGJDm4xX5h6lRsNysMt/CNHzft1z\\nIfE3S8fP/i3GonvPC8uyi8v7efobCzKduQStKmYs7aM4J6xHWf7iaBVM+gQM8aXv\\nfJHL40l0WjDypdm+AKJixFrqN0+x7EPEdVFSb5b20kNLlF6zHOJVGNOeEQKBgAMI\\ntvN2MOkGdfogorzeQaQv0aadGb3ofn6UzizRwla1Q0o5lGO6qLtOeVLmg9+d+Tgr\\n5nLTBKQTksr49LsrFo9QWBuosholHS4TuMZjX2ez0huUCKYpmWUaEG4fWEDfNdem\\npY17ZLxvZPJ9m4sBPGJWdyaq9JY3RSB3VJhK2i81AoGBANwVq/2H0fo+JjlheEtb\\nWwg6HrPUtBWzOXV5qHyhbbFrA2jPQnN82Lty7UsjTTw2SDYic63OVZs6KL6AKnLW\\nFl1X6LEURQKI3KikgMtve39Xqpr/pz8ueMVGxRQ5FscpFyTfu7X9jy5aeVHwORr1\\nWzqlRmkCz4qghC1wiZYz/sk5\\n-----END PRIVATE KEY-----\"\r\n                }\r\n            }\r\n        }\r\n    }\r\n}"
 						},
 						"url": {
 							"raw": "https://{{bigip1}}/mgmt/shared/appsvcs/declare",
@@ -1791,7 +1678,8 @@
 								"appsvcs",
 								"declare"
 							]
-						}
+						},
+						"description": "If there is an error pulling the WAF policy from GitHub, use this instead:\n\nhttp://10.1.1.252/as3gosmarter/resources/waf_acme.xml\nhttp://10.1.1.252/as3gosmarter/resources/CVE-2017-5638-ApacheStruts2.irule"
 					},
 					"response": []
 				},
@@ -2513,7 +2401,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "---\n\n- name: Deploy an App using AS3\n  hosts: all\n  connection: local\n\n  vars:\n    provider:\n      password: admin\n      server: 10.1.1.245\n      user: admin\n      validate_certs: no\n      server_port: 443\n      timeout: 60\n\n  tasks:\n    - name: Deploy an AS3 configuration\n      bigip_appsvcs_extension:\n        content: \"{{ lookup('file', '{{ playbook_dir }}/ansible-as3.json') }}\"\n        state: present\n        provider: \"{{ provider }}\"\n      delegate_to: localhost\n\n    - name: Save the running configuration of the BIG-IP\n      bigip_config:\n        save: yes\n        provider: \"{{ provider }}\"\n      delegate_to: localhost"
+							"raw": "---\n\n- name: Deploy an App using AS3\n  hosts: all\n  connection: local\n\n  vars:\n    provider:\n      password: admin\n      server: 10.1.1.245\n      user: admin\n      validate_certs: no\n      server_port: 443\n      timeout: 60\n\n  tasks:\n    - name: Deploy an AS3 configuration\n      bigip_appsvcs_extension:\n        content: \"{{ lookup('file', '{{ playbook_dir }}/ansible-as3.json') }}\"\n        state: present\n        provider: \"{{ provider }}\"\n      delegate_to: localhost\n"
 						},
 						"url": {
 							"raw": ""
