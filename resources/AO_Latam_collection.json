@@ -601,7 +601,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"oldPassword\":\"default\",\n    \"newPassword\":\"\"\n}"
+							"raw": "{\n    \"oldPassword\":\"default\",\n    \"newPassword\":\"default\"\n}"
 						},
 						"url": {
 							"raw": "https://{{bigip1}}/mgmt/shared/authn/root",
@@ -657,7 +657,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"password\":\"\",\n    \"shell\":\"bash\"\n}"
+							"raw": "{\n    \"password\":\"admin\",\n    \"shell\":\"bash\"\n}"
 						},
 						"url": {
 							"raw": "https://{{bigip1}}/mgmt/tm/auth/user/admin",
