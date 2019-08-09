@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "2c468791-ce7e-44b8-946d-2b59627c6ba4",
+		"_postman_id": "b2048645-fc99-4d03-a144-0441eaa9f894",
 		"name": "A&O Latam v2",
 		"description": "Coleccion de GoSmarter v2",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
@@ -683,7 +683,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"schemaVersion\": \"1.0.0\",\r\n    \"class\": \"Device\",\r\n    \"async\": true,\r\n    \"label\": \"Basic Onboarding Standalone BIG-IP\",\r\n    \"Common\": {\r\n        \"class\": \"Tenant\",\r\n        \"hostname\": \"bigip.f5demo.com\",\r\n        \"myDns\": {\r\n            \"class\": \"DNS\",\r\n            \"nameServers\": [\r\n                \"8.8.8.8\",\r\n                \"4.4.4.4\"\r\n            ],\r\n            \"search\": [\r\n                \"f5demo.com\"\r\n            ]\r\n        },\r\n        \"myNtp\": {\r\n            \"class\": \"NTP\",\r\n            \"servers\": [\r\n                \"0.pool.ntp.org\",\r\n                \"1.pool.ntp.org\",\r\n                \"2.pool.ntp.org\"\r\n            ],\r\n            \"timezone\": \"UTC\"\r\n        },\r\n        \"root\": {\r\n            \"class\": \"User\",\r\n            \"userType\": \"root\",\r\n            \"oldPassword\": \"default\",\r\n            \"newPassword\": \"default\"\r\n        },\r\n        \"admin\": {\r\n            \"class\": \"User\",\r\n            \"userType\": \"regular\",\r\n            \"password\": \"admin\",\r\n            \"shell\": \"bash\"\r\n        },\r\n        \"anotherUser\": {\r\n            \"class\": \"User\",\r\n            \"userType\": \"regular\",\r\n            \"password\": \"regular\",\r\n            \"shell\": \"none\",\r\n            \"partitionAccess\": {\r\n                \"all-partitions\": {\r\n                    \"role\": \"guest\"\r\n                }\r\n            }\r\n        },\r\n        \"myProvisioning\": {\r\n            \"class\": \"Provision\",\r\n            \"ltm\": \"nominal\",\r\n            \"asm\": \"nominal\"\r\n        },\r\n        \"internal\": {\r\n            \"class\": \"VLAN\",\r\n            \"tag\": 4093,\r\n            \"mtu\": 1500,\r\n            \"interfaces\": [\r\n                {\r\n                    \"name\": \"1.2\",\r\n                    \"tagged\": false\r\n                }\r\n            ]\r\n        },\r\n        \"internal-self\": {\r\n            \"class\": \"SelfIp\",\r\n            \"address\": \"10.1.20.240/24\",\r\n            \"vlan\": \"internal\",\r\n            \"allowService\": \"none\",\r\n            \"trafficGroup\": \"traffic-group-local-only\"\r\n        },\r\n        \"external\": {\r\n            \"class\": \"VLAN\",\r\n            \"tag\": 4094,\r\n            \"mtu\": 1500,\r\n            \"interfaces\": [\r\n                {\r\n                    \"name\": \"1.1\",\r\n                    \"tagged\": false\r\n                }\r\n            ]\r\n        },\r\n        \"external-self\": {\r\n            \"class\": \"SelfIp\",\r\n            \"address\": \"10.1.10.240/24\",\r\n            \"vlan\": \"external\",\r\n            \"allowService\": \"default\",\r\n            \"trafficGroup\": \"traffic-group-local-only\"\r\n        },\r\n        \"default\": {\r\n            \"class\": \"Route\",\r\n            \"gw\": \"10.1.10.1\",\r\n            \"network\": \"default\",\r\n            \"mtu\": 1500\r\n        }\r\n    }\r\n}"
+							"raw": "{\r\n    \"schemaVersion\": \"1.0.0\",\r\n    \"class\": \"Device\",\r\n    \"async\": true,\r\n    \"label\": \"Basic Onboarding Standalone BIG-IP\",\r\n    \"Common\": {\r\n        \"class\": \"Tenant\",\r\n        \"hostname\": \"bigip.f5demo.com\",\r\n        \"myDns\": {\r\n            \"class\": \"DNS\",\r\n            \"nameServers\": [\r\n                \"8.8.8.8\",\r\n                \"4.4.4.4\"\r\n            ],\r\n            \"search\": [\r\n                \"f5demo.com\"\r\n            ]\r\n        },\r\n        \"myNtp\": {\r\n            \"class\": \"NTP\",\r\n            \"servers\": [\r\n                \"0.pool.ntp.org\",\r\n                \"1.pool.ntp.org\",\r\n                \"2.pool.ntp.org\"\r\n            ],\r\n            \"timezone\": \"UTC\"\r\n        },\r\n        \"root\": {\r\n            \"class\": \"User\",\r\n            \"userType\": \"root\",\r\n            \"oldPassword\": \"default\",\r\n            \"newPassword\": \"default\"\r\n        },\r\n        \"admin\": {\r\n            \"class\": \"User\",\r\n            \"userType\": \"regular\",\r\n            \"password\": \"admin\",\r\n            \"shell\": \"bash\"\r\n        },\r\n        \"anotherUser\": {\r\n            \"class\": \"User\",\r\n            \"userType\": \"regular\",\r\n            \"password\": \"regular\",\r\n            \"shell\": \"none\",\r\n            \"partitionAccess\": {\r\n                \"all-partitions\": {\r\n                    \"role\": \"guest\"\r\n                }\r\n            }\r\n        },\r\n        \"myProvisioning\": {\r\n            \"class\": \"Provision\",\r\n            \"ltm\": \"nominal\",\r\n            \"asm\": \"nominal\",\r\n            \"avr\": \"minimum\"\r\n        },\r\n        \"internal\": {\r\n            \"class\": \"VLAN\",\r\n            \"tag\": 4093,\r\n            \"mtu\": 1500,\r\n            \"interfaces\": [\r\n                {\r\n                    \"name\": \"1.2\",\r\n                    \"tagged\": false\r\n                }\r\n            ]\r\n        },\r\n        \"internal-self\": {\r\n            \"class\": \"SelfIp\",\r\n            \"address\": \"10.1.20.240/24\",\r\n            \"vlan\": \"internal\",\r\n            \"allowService\": \"none\",\r\n            \"trafficGroup\": \"traffic-group-local-only\"\r\n        },\r\n        \"external\": {\r\n            \"class\": \"VLAN\",\r\n            \"tag\": 4094,\r\n            \"mtu\": 1500,\r\n            \"interfaces\": [\r\n                {\r\n                    \"name\": \"1.1\",\r\n                    \"tagged\": false\r\n                }\r\n            ]\r\n        },\r\n        \"external-self\": {\r\n            \"class\": \"SelfIp\",\r\n            \"address\": \"10.1.10.240/24\",\r\n            \"vlan\": \"external\",\r\n            \"allowService\": \"default\",\r\n            \"trafficGroup\": \"traffic-group-local-only\"\r\n        },\r\n        \"default\": {\r\n            \"class\": \"Route\",\r\n            \"gw\": \"10.1.10.1\",\r\n            \"network\": \"default\",\r\n            \"mtu\": 1500\r\n        }\r\n    }\r\n}"
 						},
 						"url": {
 							"raw": "https://{{bigip1}}/mgmt/shared/declarative-onboarding",
@@ -1559,6 +1559,56 @@
 			"name": "Lab 4 - AS3 with BIG-IQ",
 			"item": [
 				{
+					"name": "Step 0: Import BIG-IP into BIG-IQ (Read the guide)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "85b2f12c-366b-42d6-93c1-ce808473ddbc",
+								"exec": [
+									"eval(postman.getGlobalVariable(\"_f5_workflow_functions\"));",
+									"",
+									"var check_vals = [",
+									"        { ",
+									"            \"path\":\"timeout\", ",
+									"            \"value\":\"36000\" ",
+									"        }",
+									"    ];",
+									"",
+									"f5_check_response(check_vals);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "VIEW",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-F5-Auth-Token",
+								"value": "{{bigip_1_auth_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "Import 10.1.1.245 from BIG-IQ CM GUI\n\nDiscover device service configuration : LTM & ASM"
+						},
+						"url": {
+							"raw": "https://RTFM",
+							"protocol": "https",
+							"host": [
+								"RTFM"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "Step 1: Retrieve Authentication Token BIG-IQ CM",
 					"event": [
 						{
@@ -1608,31 +1658,24 @@
 					"response": []
 				},
 				{
-					"name": "NO FUNCIONA Step 2: Set Authentication Token Timeout BIG-IQ CM",
+					"name": "Step 2: BIG-IQ list managed devices",
 					"event": [
 						{
 							"listen": "test",
 							"script": {
-								"id": "85b2f12c-366b-42d6-93c1-ce808473ddbc",
+								"id": "fa52ba36-e40c-4453-9fa1-482bf5c7db31",
 								"exec": [
-									"eval(postman.getGlobalVariable(\"_f5_workflow_functions\"));",
-									"",
-									"var check_vals = [",
-									"        { ",
-									"            \"path\":\"timeout\", ",
-									"            \"value\":\"36000\" ",
-									"        }",
-									"    ];",
-									"",
-									"f5_check_response(check_vals);",
 									""
 								],
 								"type": "text/javascript"
 							}
 						}
 					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
 					"request": {
-						"method": "PATCH",
+						"method": "GET",
 						"header": [
 							{
 								"key": "Content-Type",
@@ -1640,15 +1683,16 @@
 							},
 							{
 								"key": "X-F5-Auth-Token",
-								"value": "{{bigip_1_auth_token}}"
+								"value": "{{bigiqcm_auth_token}}",
+								"type": "text"
 							}
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"timeout\":\"36000\"\n}"
+							"raw": ""
 						},
 						"url": {
-							"raw": "https://{{bigiq_cm}}/mgmt/shared/authz/tokens/{{bigiqcm_auth_token}}",
+							"raw": "https://{{bigiq_cm}}/mgmt/shared/resolver/device-groups/cm-bigip-allDevices/devices",
 							"protocol": "https",
 							"host": [
 								"{{bigiq_cm}}"
@@ -1656,16 +1700,99 @@
 							"path": [
 								"mgmt",
 								"shared",
-								"authz",
-								"tokens",
-								"{{bigiqcm_auth_token}}"
+								"resolver",
+								"device-groups",
+								"cm-bigip-allDevices",
+								"devices"
 							]
-						}
+						},
+						"description": "list bigiq managed bigips filtering on hostname, managementAddress and uuid\n\nuuid is used to execute tasks against devices, like collectins ucs and executing scripts"
 					},
-					"response": []
+					"response": [
+						{
+							"name": "bigiq list managed devices",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "https://{{bigiq}}/mgmt/shared/resolver/device-groups/cm-bigip-allDevices/devices?$select=hostname,managementAddress,uuid",
+									"protocol": "https",
+									"host": [
+										"{{bigiq}}"
+									],
+									"path": [
+										"mgmt",
+										"shared",
+										"resolver",
+										"device-groups",
+										"cm-bigip-allDevices",
+										"devices"
+									],
+									"query": [
+										{
+											"key": "$select",
+											"value": "hostname,managementAddress,uuid"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Server",
+									"value": "webd"
+								},
+								{
+									"key": "Date",
+									"value": "Wed, 27 Mar 2019 17:08:17 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=UTF-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "567"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Pragma",
+									"value": "no-cache"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-store"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "must-revalidate"
+								},
+								{
+									"key": "Expires",
+									"value": "-1"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"items\": [\n        {\n            \"hostname\": \"bigip32.f5.com\",\n            \"managementAddress\": \"192.168.200.32\",\n            \"uuid\": \"056ede26-b9a8-4c1c-9850-c1241b8220ae\"\n        },\n        {\n            \"hostname\": \"bigiq01.f5.com\",\n            \"managementAddress\": \"192.168.200.30\",\n            \"uuid\": \"fe8e1dcb-5af4-405c-bbb5-0be3dd03307e\"\n        },\n        {\n            \"hostname\": \"bigip31.f5.com\",\n            \"managementAddress\": \"192.168.200.31\",\n            \"uuid\": \"18cb7507-6fdf-4ed2-9c04-55518158b1aa\"\n        }\n    ],\n    \"generation\": 2,\n    \"kind\": \"shared:resolver:device-groups:devicegroupdevicecollectionstate\",\n    \"lastUpdateMicros\": 1553202161878487,\n    \"selfLink\": \"https://localhost/mgmt/shared/resolver/device-groups/cm-bigip-allDevices/devices\"\n}"
+						}
+					]
 				},
 				{
-					"name": "Step 2: Generic HTTP App via BIG-IQ",
+					"name": "Step 3: App Dashboard using BIG-IQ AS3 Templates v1",
 					"event": [
 						{
 							"listen": "test",
@@ -1687,12 +1814,12 @@
 							},
 							{
 								"key": "X-F5-Auth-Token",
-								"value": "{{bigip_1_auth_token}}"
+								"value": "{{bigiqcm_auth_token}}"
 							}
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"class\": \"AS3\",\r\n    \"action\": \"deploy\",\r\n    \"persist\": true,\r\n    \"declaration\": {\r\n       \"class\": \"ADC\",\r\n       \"schemaVersion\": \"3.0.0\",\r\n       \"id\": \"lmnopasdasdas23456\",\r\n       \"label\": \"GoSmarter\",\r\n       \"remark\": \"Generic HTTP application via BIG-IQ\",\r\n       \"ACME_cloud_02\": {\r\n          \"class\": \"Tenant\",\r\n          \"vs_BIGIQ_app_http_80\": {\r\n             \"class\": \"Application\",\r\n             \"template\": \"generic\",\r\n             \"vs_Application_http_80\": {\r\n                \"class\": \"Service_HTTP\",\r\n                \"virtualAddresses\": [\r\n                   \"10.1.10.120\"\r\n                ],\r\n                \"pool\": \"web_pool1\",\r\n                \"virtualPort\": 80\r\n             },\r\n             \"app_pool1\": {\r\n                \"class\": \"Pool\",\r\n                \"monitors\": [\r\n                   \"http\",\r\n                   \"tcp\"\r\n                ],\r\n                \"members\": [{\r\n                   \"servicePort\": 80,\r\n                   \"serverAddresses\": [\r\n                      \"10.1.20.17\"\r\n                   ]\r\n                }]\r\n             }\r\n          }\r\n       }\r\n    }\r\n}"
+							"raw": "{\r\n    \"class\": \"AS3\",\r\n    \"action\": \"deploy\",\r\n    \"persist\": true,\r\n    \"declaration\": {\r\n        \"class\": \"ADC\",\r\n        \"schemaVersion\": \"3.7.0\",\r\n        \"id\": \"example-declaration-01\",\r\n        \"label\": \"Task1\",\r\n        \"remark\": \"Deploy HTTP Application Service using BIG-IQ\",\r\n        \"target\": {\r\n            \"hostname\": \"bigip.f5demo.com\"\r\n        },\r\n        \"BIGIQ_App1\": {\r\n            \"class\": \"Tenant\",\r\n            \"MyWebApp1http\": {\r\n                \"class\": \"Application\",\r\n                \"template\": \"http\",\r\n                \"statsProfile\": {\r\n                    \"class\": \"Analytics_Profile\",\r\n                    \"collectClientSideStatistics\": true,\r\n                    \"collectGeo\": true,\r\n                    \"collectIp\": true,\r\n                    \"collectOsAndBrowser\": false,\r\n                    \"collectMethod\": false\r\n                },\r\n                \"serviceMain\": {\r\n                    \"class\": \"Service_HTTP\",\r\n                    \"virtualAddresses\": [\r\n                        \"10.1.10.211\"\r\n                    ],\r\n                    \"pool\": \"web_pool\",\r\n                    \"profileAnalytics\": {\r\n                        \"use\": \"statsProfile\"\r\n                    }\r\n                },\r\n                \"web_pool\": {\r\n                    \"class\": \"Pool\",\r\n                    \"monitors\": [\r\n                        \"http\"\r\n                    ],\r\n                    \"members\": [\r\n                        {\r\n                            \"servicePort\": 80,\r\n                            \"serverAddresses\": [\r\n                                \"10.1.20.110\",\r\n                                \"10.1.20.111\"\r\n                            ],\r\n                            \"shareNodes\": true\r\n                        }\r\n                    ]\r\n                }\r\n            }\r\n        }\r\n    }\r\n}"
 						},
 						"url": {
 							"raw": "https://{{bigiq_cm}}/mgmt/shared/appsvcs/declare",
@@ -1711,7 +1838,7 @@
 					"response": []
 				},
 				{
-					"name": "Step 3: App Dashboard using BIG-IQ AS3 Templates",
+					"name": "Step 3: App Dashboard using BIG-IQ AS3 Templates v1 Copy",
 					"event": [
 						{
 							"listen": "test",
@@ -1733,12 +1860,12 @@
 							},
 							{
 								"key": "X-F5-Auth-Token",
-								"value": "{{bigip_1_auth_token}}"
+								"value": "{{bigiqcm_auth_token}}"
 							}
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"class\": \"AS3\",\r\n    \"action\": \"deploy\",\r\n    \"persist\": true,\r\n    \"declaration\": {\r\n       \"class\": \"ADC\",\r\n       \"schemaVersion\": \"3.0.0\",\r\n       \"id\": \"lmnopasdasdas23456\",\r\n       \"label\": \"GoSmarter\",\r\n       \"remark\": \"Generic HTTP application via BIG-IQ\",\r\n       \"ACME_cloud_02\": {\r\n          \"class\": \"Tenant\",\r\n          \"vs_BIGIQ_app_http_80\": {\r\n             \"class\": \"Application\",\r\n             \"template\": \"generic\",\r\n             \"vs_Application_http_80\": {\r\n                \"class\": \"Service_HTTP\",\r\n                \"virtualAddresses\": [\r\n                   \"10.1.10.120\"\r\n                ],\r\n                \"pool\": \"web_pool1\",\r\n                \"virtualPort\": 80\r\n             },\r\n             \"app_pool1\": {\r\n                \"class\": \"Pool\",\r\n                \"monitors\": [\r\n                   \"http\",\r\n                   \"tcp\"\r\n                ],\r\n                \"members\": [{\r\n                   \"servicePort\": 80,\r\n                   \"serverAddresses\": [\r\n                      \"10.1.20.17\"\r\n                   ]\r\n                }]\r\n             }\r\n          }\r\n       }\r\n    }\r\n}"
+							"raw": "{\r\n    \"class\": \"AS3\",\r\n    \"action\": \"deploy\",\r\n    \"persist\": true,\r\n    \"declaration\": {\r\n        \"class\": \"ADC\",\r\n        \"schemaVersion\": \"3.7.0\",\r\n        \"id\": \"example-declaration-01\",\r\n        \"label\": \"Task1\",\r\n        \"remark\": \"Deploy HTTP Application Service using BIG-IQ\",\r\n        \"target\": {\r\n            \"hostname\": \"bigip.f5demo.com\"\r\n        },\r\n        \"BIGIQ_App1\": {\r\n            \"class\": \"Tenant\",\r\n            \"MyWebApp1http\": {\r\n                \"class\": \"Application\",\r\n                \"template\": \"http\",\r\n                \"statsProfile\": {\r\n                    \"class\": \"Analytics_Profile\",\r\n                    \"collectClientSideStatistics\": true,\r\n                    \"collectGeo\": true,\r\n                    \"collectIp\": true,\r\n                    \"collectOsAndBrowser\": false,\r\n                    \"collectMethod\": false\r\n                },\r\n                \"serviceMain\": {\r\n                    \"class\": \"Service_HTTP\",\r\n                    \"virtualAddresses\": [\r\n                        \"10.1.10.211\"\r\n                    ],\r\n                    \"pool\": \"web_pool\",\r\n                    \"profileAnalytics\": {\r\n                        \"use\": \"statsProfile\"\r\n                    }\r\n                },\r\n                \"web_pool\": {\r\n                    \"class\": \"Pool\",\r\n                    \"monitors\": [\r\n                        \"http\"\r\n                    ],\r\n                    \"members\": [\r\n                        {\r\n                            \"servicePort\": 80,\r\n                            \"serverAddresses\": [\r\n                                \"10.1.20.110\",\r\n                                \"10.1.20.111\"\r\n                            ],\r\n                            \"shareNodes\": true\r\n                        }\r\n                    ]\r\n                }\r\n            }\r\n        }\r\n    }\r\n}"
 						},
 						"url": {
 							"raw": "https://{{bigiq_cm}}/mgmt/shared/appsvcs/declare",
@@ -1751,6 +1878,280 @@
 								"shared",
 								"appsvcs",
 								"declare"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "BORRAR ANTERIOR v1",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "a4da1ae5-cea8-48aa-b803-b45a0086508a",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-F5-Auth-Token",
+								"value": "{{bigiqcm_auth_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"class\": \"ADC\",\r\n    \"schemaVersion\": \"3.7.0\",\r\n    \"id\": \"example-declaration-01\",\r\n    \"label\": \"Task1\",\r\n    \"remark\": \"Deploy HTTP Application Service using BIG-IQ\",\r\n    \"target\": {\r\n        \"address\": \"10.1.1.245\"\r\n    },\r\n    \"BIGIQ_App1\": {\r\n        \"class\": \"Tenant\"\r\n    }\r\n}"
+						},
+						"url": {
+							"raw": "https://{{bigiq_cm}}/mgmt/shared/appsvcs/declare",
+							"protocol": "https",
+							"host": [
+								"{{bigiq_cm}}"
+							],
+							"path": [
+								"mgmt",
+								"shared",
+								"appsvcs",
+								"declare"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Step 4: App Dashboard using BIG-IQ AS3 Templates v2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "a4da1ae5-cea8-48aa-b803-b45a0086508a",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-F5-Auth-Token",
+								"value": "{{bigiqcm_auth_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"class\": \"AS3\",\r\n    \"action\": \"deploy\",\r\n    \"persist\": true,\r\n    \"declaration\": {\r\n        \"class\": \"ADC\",\r\n        \"schemaVersion\": \"3.7.0\",\r\n        \"id\": \"isc-lab\",\r\n        \"label\": \"Task2\",\r\n        \"remark\": \"BIG-IQ AS3 Application - Generic Service\",\r\n        \"target\": {\r\n            \"hostname\": \"bigip.f5demo.com\"\r\n        },\r\n        \"BIGIQ_App2\": {\r\n            \"class\": \"Tenant\",\r\n            \"MyWebApp2generic\": {\r\n                \"class\": \"Application\",\r\n                \"template\": \"generic\",\r\n                \"statsProfile\": {\r\n                    \"class\": \"Analytics_Profile\",\r\n                    \"collectClientSideStatistics\": true,\r\n                    \"collectGeo\": true,\r\n                    \"collectIp\": true,\r\n                    \"collectOsAndBrowser\": false,\r\n                    \"collectMethod\": false\r\n                },\r\n                \"http_portal_test\": {\r\n                    \"class\": \"Service_Generic\",\r\n                    \"virtualAddresses\": [\r\n                        \"10.1.10.212\"\r\n                    ],\r\n                    \"virtualPort\": 8080,\r\n                    \"pool\": \"web_pool_8080\",\r\n                    \"profileAnalytics\": {\r\n                        \"use\": \"statsProfile\"\r\n                    }\r\n                },\r\n                \"web_pool_8080\": {\r\n                    \"class\": \"Pool\",\r\n                    \"monitors\": [\r\n                        \"tcp\"\r\n                    ],\r\n                    \"members\": [\r\n                        {\r\n                            \"servicePort\": 80,\r\n                            \"serverAddresses\": [\r\n                                \"10.1.20.126\",\r\n                                \"10.1.20.127\"\r\n                            ],\r\n                            \"shareNodes\": true\r\n                        }\r\n                    ]\r\n                }\r\n            }\r\n        }\r\n    }\r\n}"
+						},
+						"url": {
+							"raw": "https://{{bigiq_cm}}/mgmt/shared/appsvcs/declare",
+							"protocol": "https",
+							"host": [
+								"{{bigiq_cm}}"
+							],
+							"path": [
+								"mgmt",
+								"shared",
+								"appsvcs",
+								"declare"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "BORRAR ANTERIOR v2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "a4da1ae5-cea8-48aa-b803-b45a0086508a",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-F5-Auth-Token",
+								"value": "{{bigiqcm_auth_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"class\": \"ADC\",\r\n    \"schemaVersion\": \"3.7.0\",\r\n    \"id\": \"example-declaration-01\",\r\n    \"label\": \"Task1\",\r\n    \"remark\": \"Deploy HTTP Application Service using BIG-IQ\",\r\n    \"target\": {\r\n        \"address\": \"10.1.1.245\"\r\n    },\r\n    \"BIGIQ_App2\": {\r\n        \"class\": \"Tenant\"\r\n    }\r\n}"
+						},
+						"url": {
+							"raw": "https://{{bigiq_cm}}/mgmt/shared/appsvcs/declare",
+							"protocol": "https",
+							"host": [
+								"{{bigiq_cm}}"
+							],
+							"path": [
+								"mgmt",
+								"shared",
+								"appsvcs",
+								"declare"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All AS3 Declarations",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "a4da1ae5-cea8-48aa-b803-b45a0086508a",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-F5-Auth-Token",
+								"value": "{{bigiqcm_auth_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "https://{{bigiq_cm}}/mgmt/shared/appsvcs/declare",
+							"protocol": "https",
+							"host": [
+								"{{bigiq_cm}}"
+							],
+							"path": [
+								"mgmt",
+								"shared",
+								"appsvcs",
+								"declare"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Step : Delete ALL App Dashboards BIGIQ",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "a4da1ae5-cea8-48aa-b803-b45a0086508a",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-F5-Auth-Token",
+								"value": "{{bigiqcm_auth_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"class\": \"ADC\",\r\n    \"schemaVersion\": \"3.7.0\",\r\n    \"id\": \"example-declaration-01\",\r\n    \"label\": \"Task1\",\r\n    \"remark\": \"Deploy HTTP Application Service using BIG-IQ\",\r\n    \"target\": {\r\n        \"address\": \"10.1.1.245\"\r\n    },\r\n    \"BIGIQ_App1\": {\r\n        \"class\": \"Tenant\"\r\n    },\r\n    \"BIGIQ_App2\": {\r\n        \"class\": \"Tenant\"\r\n    }\r\n}"
+						},
+						"url": {
+							"raw": "https://{{bigiq_cm}}/mgmt/shared/appsvcs/declare",
+							"protocol": "https",
+							"host": [
+								"{{bigiq_cm}}"
+							],
+							"path": [
+								"mgmt",
+								"shared",
+								"appsvcs",
+								"declare"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Step 4: Test Service Discovery",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-F5-Auth-Token",
+								"value": "{{bigiqcm_auth_token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "https://{{bigiq_cm}}/mgmt/cm/global/tasks/device-discovery",
+							"protocol": "https",
+							"host": [
+								"{{bigiq_cm}}"
+							],
+							"path": [
+								"mgmt",
+								"cm",
+								"global",
+								"tasks",
+								"device-discovery"
 							]
 						}
 					},
@@ -2288,6 +2689,38 @@
 				},
 				{
 					"name": "Paso 4: Playbook para borrar App con AS3",
+					"request": {
+						"method": "VIEW",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "---\n\n- name: Remove a Tenant using AS3\n  hosts: all\n  connection: local\n\n  vars:\n    provider:\n      password: admin\n      server: 10.1.1.245\n      user: admin\n      validate_certs: no\n      server_port: 443\n      timeout: 60\n\n  tasks:\n    - name: Remove tenant from AS3 configurations\n      bigip_appsvcs_extension:\n        tenants:\n        - ACME_cloud_ANSIBLE\n        state: absent\n        provider: \"{{ provider }}\"\n      delegate_to: localhost"
+						},
+						"url": {
+							"raw": ""
+						},
+						"description": "Ir a server Linux Ubuntu\nansible-playbook -i inventory/hosts playbook-as3.yaml\nVerificar el BIG-IP"
+					},
+					"response": []
+				},
+				{
+					"name": "Paso 5: Playbook para crear App con AS3 desde BIG-IQ",
+					"request": {
+						"method": "VIEW",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "---\n\n- name: Remove a Tenant using AS3\n  hosts: all\n  connection: local\n\n  vars:\n    provider:\n      password: admin\n      server: 10.1.1.245\n      user: admin\n      validate_certs: no\n      server_port: 443\n      timeout: 60\n\n  tasks:\n    - name: Remove tenant from AS3 configurations\n      bigip_appsvcs_extension:\n        tenants:\n        - ACME_cloud_ANSIBLE\n        state: absent\n        provider: \"{{ provider }}\"\n      delegate_to: localhost"
+						},
+						"url": {
+							"raw": ""
+						},
+						"description": "Ir a server Linux Ubuntu\nansible-playbook -i inventory/hosts playbook-as3.yaml\nVerificar el BIG-IP"
+					},
+					"response": []
+				},
+				{
+					"name": "Paso 6: Playbook para borrar App con AS3 desde BIG-IQ",
 					"request": {
 						"method": "VIEW",
 						"header": [],
