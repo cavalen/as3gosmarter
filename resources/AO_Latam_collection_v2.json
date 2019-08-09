@@ -1819,53 +1819,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"class\": \"AS3\",\r\n    \"action\": \"deploy\",\r\n    \"persist\": true,\r\n    \"declaration\": {\r\n        \"class\": \"ADC\",\r\n        \"schemaVersion\": \"3.7.0\",\r\n        \"id\": \"example-declaration-01\",\r\n        \"label\": \"Task1\",\r\n        \"remark\": \"Deploy HTTP Application Service using BIG-IQ\",\r\n        \"target\": {\r\n            \"hostname\": \"bigip.f5demo.com\"\r\n        },\r\n        \"BIGIQ_App1\": {\r\n            \"class\": \"Tenant\",\r\n            \"MyWebApp1http\": {\r\n                \"class\": \"Application\",\r\n                \"template\": \"http\",\r\n                \"statsProfile\": {\r\n                    \"class\": \"Analytics_Profile\",\r\n                    \"collectClientSideStatistics\": true,\r\n                    \"collectGeo\": true,\r\n                    \"collectIp\": true,\r\n                    \"collectOsAndBrowser\": false,\r\n                    \"collectMethod\": false\r\n                },\r\n                \"serviceMain\": {\r\n                    \"class\": \"Service_HTTP\",\r\n                    \"virtualAddresses\": [\r\n                        \"10.1.10.211\"\r\n                    ],\r\n                    \"pool\": \"web_pool\",\r\n                    \"profileAnalytics\": {\r\n                        \"use\": \"statsProfile\"\r\n                    }\r\n                },\r\n                \"web_pool\": {\r\n                    \"class\": \"Pool\",\r\n                    \"monitors\": [\r\n                        \"http\"\r\n                    ],\r\n                    \"members\": [\r\n                        {\r\n                            \"servicePort\": 80,\r\n                            \"serverAddresses\": [\r\n                                \"10.1.20.110\",\r\n                                \"10.1.20.111\"\r\n                            ],\r\n                            \"shareNodes\": true\r\n                        }\r\n                    ]\r\n                }\r\n            }\r\n        }\r\n    }\r\n}"
-						},
-						"url": {
-							"raw": "https://{{bigiq_cm}}/mgmt/shared/appsvcs/declare",
-							"protocol": "https",
-							"host": [
-								"{{bigiq_cm}}"
-							],
-							"path": [
-								"mgmt",
-								"shared",
-								"appsvcs",
-								"declare"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Step 3: App Dashboard using BIG-IQ AS3 Templates v1 Copy",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"id": "a4da1ae5-cea8-48aa-b803-b45a0086508a",
-								"exec": [
-									""
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json"
-							},
-							{
-								"key": "X-F5-Auth-Token",
-								"value": "{{bigiqcm_auth_token}}"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"class\": \"AS3\",\r\n    \"action\": \"deploy\",\r\n    \"persist\": true,\r\n    \"declaration\": {\r\n        \"class\": \"ADC\",\r\n        \"schemaVersion\": \"3.7.0\",\r\n        \"id\": \"example-declaration-01\",\r\n        \"label\": \"Task1\",\r\n        \"remark\": \"Deploy HTTP Application Service using BIG-IQ\",\r\n        \"target\": {\r\n            \"hostname\": \"bigip.f5demo.com\"\r\n        },\r\n        \"BIGIQ_App1\": {\r\n            \"class\": \"Tenant\",\r\n            \"MyWebApp1http\": {\r\n                \"class\": \"Application\",\r\n                \"template\": \"http\",\r\n                \"statsProfile\": {\r\n                    \"class\": \"Analytics_Profile\",\r\n                    \"collectClientSideStatistics\": true,\r\n                    \"collectGeo\": true,\r\n                    \"collectIp\": true,\r\n                    \"collectOsAndBrowser\": false,\r\n                    \"collectMethod\": false\r\n                },\r\n                \"serviceMain\": {\r\n                    \"class\": \"Service_HTTP\",\r\n                    \"virtualAddresses\": [\r\n                        \"10.1.10.211\"\r\n                    ],\r\n                    \"pool\": \"web_pool\",\r\n                    \"profileAnalytics\": {\r\n                        \"use\": \"statsProfile\"\r\n                    }\r\n                },\r\n                \"web_pool\": {\r\n                    \"class\": \"Pool\",\r\n                    \"monitors\": [\r\n                        \"http\"\r\n                    ],\r\n                    \"members\": [\r\n                        {\r\n                            \"servicePort\": 80,\r\n                            \"serverAddresses\": [\r\n                                \"10.1.20.110\",\r\n                                \"10.1.20.111\"\r\n                            ],\r\n                            \"shareNodes\": true\r\n                        }\r\n                    ]\r\n                }\r\n            }\r\n        }\r\n    }\r\n}"
+							"raw": "{\r\n    \"class\": \"AS3\",\r\n    \"action\": \"deploy\",\r\n    \"persist\": true,\r\n    \"declaration\": {\r\n        \"class\": \"ADC\",\r\n        \"schemaVersion\": \"3.7.0\",\r\n        \"id\": \"example-declaration-01\",\r\n        \"label\": \"Task1\",\r\n        \"remark\": \"Deploy HTTP Application Service using BIG-IQ\",\r\n        \"target\": {\r\n            \"hostname\": \"bigip.f5demo.com\"\r\n        },\r\n        \"BIGIQ_App1\": {\r\n            \"class\": \"Tenant\",\r\n            \"MyWebApp1http\": {\r\n                \"class\": \"Application\",\r\n                \"template\": \"http\",\r\n                \"statsProfile\": {\r\n                    \"class\": \"Analytics_Profile\",\r\n                    \"collectClientSideStatistics\": true,\r\n                    \"collectGeo\": true,\r\n                    \"collectIp\": true,\r\n                    \"collectOsAndBrowser\": false,\r\n                    \"collectMethod\": false\r\n                },\r\n                \"serviceMain\": {\r\n                    \"class\": \"Service_HTTP\",\r\n                    \"virtualAddresses\": [\r\n                        \"10.1.10.211\"\r\n                    ],\r\n                    \"pool\": \"web_pool\",\r\n                    \"profileAnalytics\": {\r\n                        \"use\": \"statsProfile\"\r\n                    }\r\n                },\r\n                \"web_pool\": {\r\n                    \"class\": \"Pool\",\r\n                    \"monitors\": [\r\n                        \"http\"\r\n                    ],\r\n                    \"members\": [\r\n                        {\r\n                            \"servicePort\": 80,\r\n                            \"serverAddresses\": [\r\n                                \"10.1.20.11\",\r\n                                \"10.1.20.12\",\r\n                                \"10.1.20.13\"\r\n                            ],\r\n                            \"shareNodes\": true\r\n                        }\r\n                    ]\r\n                }\r\n            }\r\n        }\r\n    }\r\n}"
 						},
 						"url": {
 							"raw": "https://{{bigiq_cm}}/mgmt/shared/appsvcs/declare",
@@ -1957,7 +1911,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"class\": \"AS3\",\r\n    \"action\": \"deploy\",\r\n    \"persist\": true,\r\n    \"declaration\": {\r\n        \"class\": \"ADC\",\r\n        \"schemaVersion\": \"3.7.0\",\r\n        \"id\": \"isc-lab\",\r\n        \"label\": \"Task2\",\r\n        \"remark\": \"BIG-IQ AS3 Application - Generic Service\",\r\n        \"target\": {\r\n            \"hostname\": \"bigip.f5demo.com\"\r\n        },\r\n        \"BIGIQ_App2\": {\r\n            \"class\": \"Tenant\",\r\n            \"MyWebApp2generic\": {\r\n                \"class\": \"Application\",\r\n                \"template\": \"generic\",\r\n                \"statsProfile\": {\r\n                    \"class\": \"Analytics_Profile\",\r\n                    \"collectClientSideStatistics\": true,\r\n                    \"collectGeo\": true,\r\n                    \"collectIp\": true,\r\n                    \"collectOsAndBrowser\": false,\r\n                    \"collectMethod\": false\r\n                },\r\n                \"http_portal_test\": {\r\n                    \"class\": \"Service_Generic\",\r\n                    \"virtualAddresses\": [\r\n                        \"10.1.10.212\"\r\n                    ],\r\n                    \"virtualPort\": 8080,\r\n                    \"pool\": \"web_pool_8080\",\r\n                    \"profileAnalytics\": {\r\n                        \"use\": \"statsProfile\"\r\n                    }\r\n                },\r\n                \"web_pool_8080\": {\r\n                    \"class\": \"Pool\",\r\n                    \"monitors\": [\r\n                        \"tcp\"\r\n                    ],\r\n                    \"members\": [\r\n                        {\r\n                            \"servicePort\": 80,\r\n                            \"serverAddresses\": [\r\n                                \"10.1.20.126\",\r\n                                \"10.1.20.127\"\r\n                            ],\r\n                            \"shareNodes\": true\r\n                        }\r\n                    ]\r\n                }\r\n            }\r\n        }\r\n    }\r\n}"
+							"raw": "{\r\n    \"class\": \"AS3\",\r\n    \"action\": \"deploy\",\r\n    \"persist\": true,\r\n    \"declaration\": {\r\n        \"class\": \"ADC\",\r\n        \"schemaVersion\": \"3.7.0\",\r\n        \"id\": \"isc-lab\",\r\n        \"label\": \"Task2\",\r\n        \"remark\": \"BIG-IQ AS3 Application - Generic Service\",\r\n        \"target\": {\r\n            \"hostname\": \"bigip.f5demo.com\"\r\n        },\r\n        \"BIGIQ_App2\": {\r\n            \"class\": \"Tenant\",\r\n            \"MyWebApp2generic\": {\r\n                \"class\": \"Application\",\r\n                \"template\": \"generic\",\r\n                \"statsProfile\": {\r\n                    \"class\": \"Analytics_Profile\",\r\n                    \"collectClientSideStatistics\": true,\r\n                    \"collectGeo\": true,\r\n                    \"collectIp\": true,\r\n                    \"collectOsAndBrowser\": false,\r\n                    \"collectMethod\": false\r\n                },\r\n                \"http_portal_test\": {\r\n                    \"class\": \"Service_HTTP\",\r\n                    \"virtualAddresses\": [\r\n                        \"10.1.10.212\"\r\n                    ],\r\n                    \"virtualPort\": 8080,\r\n                    \"pool\": \"web_pool_8080\",\r\n                    \"profileAnalytics\": {\r\n                        \"use\": \"statsProfile\"\r\n                    }\r\n                },\r\n                \"web_pool_8080\": {\r\n                    \"class\": \"Pool\",\r\n                    \"monitors\": [\r\n                        \"tcp\"\r\n                    ],\r\n                    \"members\": [\r\n                        {\r\n                            \"servicePort\": 80,\r\n                            \"serverAddresses\": [\r\n                                \"10.1.20.17\"\r\n                            ],\r\n                            \"shareNodes\": true\r\n                        }\r\n                    ]\r\n                }\r\n            }\r\n        }\r\n    }\r\n}"
 						},
 						"url": {
 							"raw": "https://{{bigiq_cm}}/mgmt/shared/appsvcs/declare",
